@@ -1,0 +1,25 @@
+version: '3.3'
+
+services:
+  vite-test:
+    image: nginx:stable-alpine
+    container_name: vite-test
+    ports:
+      - "80:80"
+    volumes:
+      # - ./default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/default.conf:/etc/nginx/templates/default.conf.template:ro
+      - ./dist:/usr/share/nginx/html
+    environment:
+      - VIRTUAL_HOST=vite-test.loi.tra
+      - API_URL=http://vite-test-backend
+      - API_HOST=vite-test-backend
+    healthcheck:
+      test: ["CMD-SHELL", "wget -O /dev/null http://vite-test.loi.tra/nginx-health || exit 1"]
+      timeout: 5s
+      retries: 10
+
+networks:
+  default:
+    external:
+      name: nginx-proxy-net
