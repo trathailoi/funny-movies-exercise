@@ -1,10 +1,13 @@
 import {
-  BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique, UpdateDateColumn
+  BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique, UpdateDateColumn, OneToMany
 } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
+import { Movie } from '../app/movie/movie.entity'
+
+import { IUser } from './user.interface'
 
 @Entity()
-export class User extends BaseEntity {
+export class User extends BaseEntity implements IUser {
   @PrimaryGeneratedColumn('uuid')
     id!: string
 
@@ -40,6 +43,14 @@ export class User extends BaseEntity {
     // nullable: true
   })
     modifiedAt?: Date
+
+  @OneToMany(() => Movie, (movie) => movie.id, {
+    cascade: true,
+    // // nullable: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+  })
+    movies?: Movie[]
 
   // @CreateDateColumn({
   //   default: 'now()',

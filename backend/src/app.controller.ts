@@ -2,7 +2,9 @@ import {
   Controller, Get, Post, UseGuards, Request, UsePipes, HttpCode, HttpStatus
 } from '@nestjs/common'
 import * as Joi from 'joi'
-import { ApiOkResponse, ApiTags, ApiBody } from '@nestjs/swagger'
+import {
+  ApiOkResponse, ApiTags, ApiBody, ApiOperation
+} from '@nestjs/swagger'
 import { AppService } from './app.service'
 import { AuthService } from './auth/auth.service'
 import { LocalAuthGuard } from './auth/local-auth.guard'
@@ -19,12 +21,14 @@ export class AppController {
   ) {}
 
   @Get()
+  @ApiOperation({ summary: 'just for testing out the authorization functionality' })
   getHello(): string {
     return this.appService.getHello()
   }
 
   @ApiTags('authen')
   @Post('auth/login')
+  @ApiOperation({ summary: 'sign in' })
   @ApiBody({
     schema: {
       type: 'object',

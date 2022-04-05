@@ -2,11 +2,11 @@ import {
   InsertResult, UpdateResult, DeleteResult, Repository
 } from 'typeorm'
 import type { EntityId } from 'typeorm/repository/EntityId'
-import { MzLogger } from '../../logger/logger.service'
+import { FmLogger } from '../../logger/logger.service'
 import { User } from '../../user/user.entity'
 
 export class BaseService<T> {
-  protected readonly logger = new MzLogger(this.constructor.name)
+  protected readonly logger = new FmLogger(this.constructor.name)
 
   constructor(protected readonly repository: Repository<T>) {}
 

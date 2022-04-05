@@ -4,6 +4,12 @@ import { Injectable } from '@nestjs/common'
 import { User } from '../../user/user.entity'
 import { CreateUserDto } from '../../user/dto/create-user.dto'
 
+import { Reaction } from '../reaction/reaction.entity'
+import { ReactionDto } from '../reaction/dto/reaction.dto'
+
+import { Movie } from '../movie/movie.entity'
+import { MovieDto } from '../movie/dto/movie.dto'
+
 /**
  * Wrapper around automapper, for dependency injection convenience (static/global variables bad)
  */
@@ -46,6 +52,18 @@ class Mapper {
       CreateUserDto,
       User,
       ['id', 'email', 'firstName', 'lastName', 'password']
+    )
+
+    this.createDefaultBiDiMap(
+      ReactionDto,
+      Reaction,
+      ['user', 'action', 'movie']
+    )
+
+    this.createDefaultBiDiMap(
+      MovieDto,
+      Movie,
+      ['id', 'title', 'desc', 'thumbnailPath', 'srcPath', 'author']
     )
   }
 

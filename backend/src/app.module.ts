@@ -20,6 +20,8 @@ import LogsMiddleware from './logger/logger.middleware'
 import { UserModule } from './user/user.module'
 import { AuthModule } from './auth/auth.module'
 import { JwtAuthGuard } from './auth/jwt-auth.guard'
+import { MovieModule } from './app/movie/movie.module'
+import { ReactionModule } from './app/reaction/reaction.module'
 
 import { HealthController } from './health/health.controller'
 
@@ -42,7 +44,9 @@ import { HealthController } from './health/health.controller'
       })
     }),
     UserModule,
-    AuthModule
+    AuthModule,
+    ReactionModule,
+    MovieModule
 
     // AutomapperModule.forRoot({
     //   options: [{

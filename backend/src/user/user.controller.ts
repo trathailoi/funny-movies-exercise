@@ -2,7 +2,7 @@ import {
   Controller, Post, Body, HttpCode, HttpStatus, UsePipes, BadRequestException
 } from '@nestjs/common'
 import {
-  ApiTags, ApiBody, ApiCreatedResponse
+  ApiTags, ApiBody, ApiCreatedResponse, ApiOperation
 } from '@nestjs/swagger'
 import * as Joi from 'joi'
 import { Mapper } from '../app/common/mapper'
@@ -21,6 +21,7 @@ export class UserController {
   ) {}
 
   @Post()
+  @ApiOperation({ summary: 'sign up' })
   @ApiBody({
     schema: {
       type: 'object',

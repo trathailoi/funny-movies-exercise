@@ -1,10 +1,10 @@
 import { Global, Module } from '@nestjs/common'
-import { MzLogger } from './logger.service'
+import { FmLogger } from './logger.service'
 
 @Global()
 @Module({
-  providers: [MzLogger],
-  exports: [MzLogger]
+  providers: [FmLogger],
+  exports: [FmLogger]
 })
 export class LoggerModule {
 }

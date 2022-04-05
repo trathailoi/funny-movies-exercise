@@ -6,7 +6,7 @@ import type { LogLevel } from '@nestjs/common'
 import { appConfig } from '../app.config'
 
 @Injectable({ scope: Scope.TRANSIENT })
-export class MzLogger extends ConsoleLogger implements LoggerService {
+export class FmLogger extends ConsoleLogger implements LoggerService {
   constructor(
     context: string,
     options?: {
