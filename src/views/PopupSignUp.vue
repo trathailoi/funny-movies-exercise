@@ -76,6 +76,13 @@ const formValue = ref({
 })
 const signUpFormRules = {
   ...rules,
+  password: [
+    {
+      required: true,
+      message: 'Please enter a valid password',
+      validator: (rule: FormItemRule, value: string): boolean => Boolean(value && value.length >= 8 && /(?=.*[A-Z])/.test(value) && /(?=.*\d)/.test(value))
+    }
+  ],
   confirmPassword: [
     {
       required: true,
@@ -119,8 +126,13 @@ const onSignUpClick = (e: MouseEvent) => {
         message.success('Sign up successfully! Please sign in!')
         emit('close', false)
       } catch (err: any) {
-        // console.log(e?.message)
-        message.error(err?.message)
+        if (err.response) {
+          message.error((err.response.data && err.response.data.message) || err.message)
+        } else if (err.request) {
+          message.error(err.request)
+        } else {
+          message.error(err.message)
+        }
       }
     }
   })

@@ -13,12 +13,5 @@ export const rules = {
     },
     message: 'Please enter your email!',
     trigger: ['input', 'blur']
-  },
-  password: [
-    {
-      required: true,
-      message: 'Please enter a valid password',
-      validator: (rule: FormItemRule, value: string): boolean => Boolean(value && value.length >= 8 && /(?=.*[A-Z])/.test(value) && /(?=.*\d)/.test(value))
-    }
-  ]
+  }
 }

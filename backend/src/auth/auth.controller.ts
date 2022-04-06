@@ -1,7 +1,8 @@
 import {
   Controller, Post, UseGuards, Request, UsePipes, HttpCode, HttpStatus,
-  Body, BadRequestException
+  Body, BadRequestException, Res
 } from '@nestjs/common'
+import { Response } from 'express'
 import * as Joi from 'joi'
 import {
   ApiOkResponse, ApiTags, ApiBody, ApiOperation, ApiCreatedResponse
@@ -91,7 +92,14 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @MzPublic()
   @HttpCode(HttpStatus.OK)
-  login(@Request() req) {
-    return this.authService.login(req.user)
+  async login(@Request() req, @Res({ passthrough: true }) response: Response) {
+    const result = await this.authService.login(req.user)
+    response.cookie('funnymovies-token', result.access_token, {
+      expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
+      httpOnly: true,
+      secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
+    })
+    response.setHeader('Authorization', result.access_token)
+    return response.status(200).json(result)
   }
 }

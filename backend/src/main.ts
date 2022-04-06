@@ -1,6 +1,8 @@
 import { NestFactory } from '@nestjs/core'
 import { VersioningType } from '@nestjs/common'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
+import * as cookieParser from 'cookie-parser'
+
 import { AppModule } from './app.module'
 import { appConfig } from './app.config'
 import { FmLogger } from './logger/logger.service'
@@ -27,6 +29,7 @@ async function bootstrap() {
   }
 
   app.enableCors()
+  app.use(cookieParser())
   logger.debug(`appConfig.getPort(): ${appConfig.getPort()}`)
   await app.listen(appConfig.getPort())
 }

@@ -16,11 +16,47 @@
             </router-link>
           </template>
           <template #extra>
-            <button @click="showSignUpPopup(true)">
-              Sign Up
-            </button>
-            <PopupSignUp v-model:value="isSignUpPopupVisible" @close="showSignUpPopup(false)" />
-            <n-space>
+            <n-space v-if="user && user.email">
+              <span>Welcome, {{ user.email }}</span>
+              <n-button @click="shareMovie">
+                Share
+              </n-button>
+              <n-button @click="doLogout">
+                Logout
+              </n-button>
+            </n-space>
+            <n-space v-else>
+              <n-form
+                ref="formRef"
+                inline
+                :model="formValue"
+                :rules="rules"
+                size="small"
+              >
+                <n-form-item label="Email" path="email">
+                  <n-input v-model:value="formValue.email" placeholder="Input Email" />
+                </n-form-item>
+                <n-form-item label="Password" path="password">
+                  <n-input
+                    v-model:value="formValue.password"
+                    type="password"
+                    @keydown.enter.prevent
+                  />
+                </n-form-item>
+                <n-form-item>
+                  <n-space>
+                    <n-button @click="doSignIn">
+                      Sign In
+                    </n-button>
+                    <n-button @click="$event.preventDefault();showSignUpPopup(true)">
+                      Sign Up
+                    </n-button>
+                  </n-space>
+                </n-form-item>
+              </n-form>
+              <PopupSignUp v-model:value="isSignUpPopupVisible" @close="showSignUpPopup(false)" />
+            </n-space>
+            <!-- <n-space>
               <n-switch v-model:value="isDarkMode" class="mb-3">
                 <template #checked>
                   🌙
@@ -29,7 +65,7 @@
                   🌞
                 </template>
               </n-switch>
-            </n-space>
+            </n-space> -->
           </template>
         </n-page-header>
 
@@ -43,21 +79,31 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { darkTheme } from 'naive-ui'
+import { darkTheme, FormInst, useMessage } from 'naive-ui'
 import { useRoute, RouterLink } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
 import { useRootStore } from '@/stores/index'
+import { setCookie } from '@/utils/index'
 
+import { signin } from '@/services/authen'
+import { rules } from '@/utils/input-validation'
 import PopupSignUp from '../views/PopupSignUp.vue'
 
+const message = useMessage()
 const route = useRoute()
+const formRef = ref<FormInst | null>(null)
 
 // data
 const isSignUpPopupVisible = ref(false)
+const formValue = ref({
+  email: '',
+  password: ''
+})
 
 // computed
-const { isDarkMode } = storeToRefs(useRootStore())
+const { isDarkMode, user } = storeToRefs(useRootStore())
+const { login } = useRootStore()
 const currentTheme = computed(() => isDarkMode.value ? darkTheme : undefined)
 
 const routerTitle = computed<string>(() => (
@@ -67,5 +113,50 @@ const routerTitle = computed<string>(() => (
 // methods
 const showSignUpPopup = (val: boolean) => {
   isSignUpPopupVisible.value = val
+}
+
+const tokenKey = 'funnymovies-token'
+const doSignIn = (e: MouseEvent) => {
+  e.preventDefault()
+  if (formRef.value) {
+    formRef.value?.validate(async (errors) => {
+      if (!errors) {
+        const { email, password } = formValue.value
+        try {
+          const { data } = await signin({ email, password })
+          if (data.success) {
+            message.success('Sign in successfuly')
+            setCookie(tokenKey, data.access_token)
+            login({ email })
+          } else {
+            message.error(data.message)
+          }
+        } catch (err: any) {
+          if (err.response) {
+            if (err.response.status === 401) {
+              message.error('The email or password is incorrect!')
+              // message.error(err.response.data.message)
+            } else {
+              message.error(err.message)
+            }
+          } else if (err.request) {
+            message.error(err.request)
+          } else {
+            // message.error('Something went wrong')
+            message.error(err.message)
+          }
+        }
+      }
+    })
+  }
+}
+
+const shareMovie = (e: MouseEvent) => {
+  e.preventDefault()
+}
+
+const doLogout = (e: MouseEvent) => {
+  e.preventDefault()
+  setCookie(tokenKey, null)
 }
 </script>
