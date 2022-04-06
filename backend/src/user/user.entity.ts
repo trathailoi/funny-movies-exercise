@@ -15,11 +15,15 @@ export class User extends BaseEntity implements IUser {
   @Column()
     email: string
 
-  @Column()
-    firstName: string
+  @Column({
+    nullable: true
+  })
+    firstName?: string
 
-  @Column()
-    lastName: string
+  @Column({
+    nullable: true
+  })
+    lastName?: string
 
   @Exclude()
   @Column()

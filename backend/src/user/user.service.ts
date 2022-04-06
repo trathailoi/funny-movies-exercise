@@ -14,6 +14,10 @@ export class UserService {
     return this.repository.findOne({ email })
   }
 
+  async insert(u) {
+    return this.repository.insert(u)
+  }
+
   async create(entity: User): Promise<InsertResult> {
     const tmpUser: User = entity
     const salt = await bcrypt.genSalt()

@@ -2,11 +2,11 @@ import {
   Controller, Post, Body, HttpCode, HttpStatus, UsePipes, BadRequestException
 } from '@nestjs/common'
 import {
-  ApiTags, ApiBody, ApiCreatedResponse, ApiOperation
+  ApiTags, ApiBody, ApiCreatedResponse, ApiOperation, ApiExcludeEndpoint
 } from '@nestjs/swagger'
 import * as Joi from 'joi'
 import { Mapper } from '../app/common/mapper'
-import { MzPublic } from '../app/common/decorator/public.decorator'
+// import { MzPublic } from '../app/common/decorator/public.decorator'
 import { JoiValidationPipe } from '../app/common/validation.pipe'
 import { CreateUserDto } from './dto/create-user.dto'
 import { User } from './user.entity'
@@ -21,7 +21,7 @@ export class UserController {
   ) {}
 
   @Post()
-  @ApiOperation({ summary: 'sign up' })
+  @ApiOperation({ summary: 'create new user' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -35,7 +35,7 @@ export class UserController {
     }
   })
   @ApiCreatedResponse({})
-  @MzPublic()
+  @ApiExcludeEndpoint()
   @UsePipes(new JoiValidationPipe({
     body: Joi.object({
       email: Joi.string().email().required(),
