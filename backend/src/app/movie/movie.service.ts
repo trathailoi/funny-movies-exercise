@@ -13,6 +13,17 @@ export class MovieService extends BaseService<Movie> {
   }
 
   findOne(id: EntityId): Promise<Movie | undefined> {
-    return this.repo.findOne(id, { relations: ['reactions'] })
+    return this.repo.findOne(id, { relations: ['reactions', 'reactions.user', 'reactions.movie'] })
   }
+
+  // async findAllWithReactions(): Promise<Array<Movie>> {
+  //   return this.repo.createQueryBuilder('movie')
+  //     .innerJoinAndSelect('movie.reactions', 'reaction')
+  //     .select([
+  //       'movie.*',
+  //       // 'movie.reactions AS myreactions'
+  //       'reaction.action'
+  //     ])
+  //     .getMany()
+  // }
 }

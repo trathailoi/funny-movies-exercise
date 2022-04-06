@@ -17,7 +17,7 @@
           </template>
           <template #extra>
             <n-space v-if="user && user.email">
-              <span>Welcome, {{ user.email }}</span>
+              <div class="flex items-center h-full">Welcome, {{ user.email }}</div>
               <n-button @click="shareMovie">
                 Share
               </n-button>

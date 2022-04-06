@@ -19,7 +19,7 @@ export class BaseService<T> {
     return this.repository.update(id, { ...entity, modifiedBy })
   }
 
-  async findAll(queryObject?: { where?, relations?: string[], pagination?: { pageSize?: number, currentPage?: number }, order? }): Promise<{ data: Array<T>, count: number }> {
+  async findAll(queryObject?: { where?, relations?: string[], pagination?: { pageSize?: number, currentPage?: number }, order?, select? }): Promise<{ data: Array<T>, count: number }> {
     const defaultPaginationConf = { take: 20, skip: 0 } // skip: take * (page - 1)
     let queryObj = {}
     if (queryObject?.where && Object.keys(queryObject?.where).length > 0) {
@@ -27,6 +27,9 @@ export class BaseService<T> {
     }
     if (queryObject?.relations && queryObject?.relations.length > 0) {
       queryObj = { ...queryObj, relations: queryObject?.relations }
+    }
+    if (queryObject?.select && queryObject?.select.length > 0) {
+      queryObj = { ...queryObj, select: queryObject?.select }
     }
     if (queryObject?.pagination && Object.keys(queryObject?.pagination).length > 0) {
       if (queryObject.pagination.pageSize) {

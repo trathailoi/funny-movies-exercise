@@ -14,12 +14,17 @@ const routes: Array<RouteRecordRaw> = [
       ]
     },
     children: [
+      { // Home
+        path: '/',
+        name: 'home',
+        component: () => import('@/views/PageHome.vue')
+      },
       { // 404
         path: '/:pathMatch(.*)',
         name: 'not-found',
         component: () => import('@/views/PageNotFound.vue')
       },
-      {
+      { // About
         path: 'about',
         name: 'about',
         component: () => import('@/views/PageAbout.vue'),

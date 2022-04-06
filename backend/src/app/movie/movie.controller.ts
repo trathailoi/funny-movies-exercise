@@ -71,15 +71,33 @@ export class MovieController {
   @ApiQuery({
     name: 'currentPage', required: false, schema: { minimum: 1 }, description: 'Current page.'
   })
-  findAll(@Query('pageSize') pageSize: number, @Query('currentPage') currentPage: number) {
+  async findAll(@Query('pageSize') pageSize: number, @Query('currentPage') currentPage: number) {
     try {
-      return this.movieService.findAll({
+      const { data, count } = await this.movieService.findAll({
         pagination: {
           pageSize,
           currentPage
         },
-        relations: ['reactions']
+        relations: ['reactions', 'reactions.user'],
+        select: [
+          'id', 'title', 'desc', 'thumbnailPath', 'srcPath', 'author'
+          // 'reactions.action', 'reactions.user',
+          // 'reactions.user.id', 'reactions.user.email'
+        ]
       })
+      return {
+        data: data.map((m: Movie) => ({
+          id: m.id,
+          title: m.title,
+          desc: m.desc,
+          thumbnailPath: m.thumbnailPath,
+          srcPath: m.srcPath,
+          author: m.author,
+          likes: m.reactions.filter((r) => r.action === 'like').map((r) => r.user.id),
+          dislikes: m.reactions.filter((r) => r.action === 'dislike').map((r) => r.user.id)
+        })),
+        count
+      }
     } catch (error) {
       throw new BadRequestException(error)
     }
@@ -174,7 +192,7 @@ export class MovieController {
   async reactMovie(@Param('id') id: string, @Query('action') action: string, @Req() req) {
     // TODO: need to implement ExceptionFilter at global scope for such cases
     // try {
-    await this.reactionService.react(this.mapper.map(ReactionDto, Reaction, { movie: id, action, user: req.user }))
+    await this.reactionService.react(this.mapper.map(ReactionDto, Reaction, { movie: id, action, user: req.user.id }))
     return {
       message: 'success'
     }
