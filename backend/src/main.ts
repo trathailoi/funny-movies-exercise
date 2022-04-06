@@ -28,7 +28,10 @@ async function bootstrap() {
     SwaggerModule.setup('api', app, document) // NOTE: access the Swagger documentation at "/api"
   }
 
-  app.enableCors()
+  app.enableCors({
+    origin: appConfig.getClientUrl(),
+    credentials: true
+  })
   app.use(cookieParser())
   logger.debug(`appConfig.getPort(): ${appConfig.getPort()}`)
   await app.listen(appConfig.getPort())

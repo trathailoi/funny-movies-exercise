@@ -1,5 +1,5 @@
 import {
-  Controller, Post, UseGuards, Request, UsePipes, HttpCode, HttpStatus,
+  Controller, Post, Get, UseGuards, Request, UsePipes, HttpCode, HttpStatus,
   Body, BadRequestException, Res
 } from '@nestjs/common'
 import { Response } from 'express'
@@ -99,7 +99,12 @@ export class AuthController {
       httpOnly: true,
       secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
     })
-    response.setHeader('Authorization', result.access_token)
-    return response.status(200).json(result)
+    response.status(200).json(result)
+  }
+
+  @Get('check')
+  @HttpCode(HttpStatus.OK)
+  async check(@Request() req) {
+    return req.user
   }
 }

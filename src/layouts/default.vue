@@ -21,7 +21,7 @@
               <n-button @click="shareMovie">
                 Share
               </n-button>
-              <n-button @click="doLogout">
+              <n-button @click="logout">
                 Logout
               </n-button>
             </n-space>
@@ -103,7 +103,7 @@ const formValue = ref({
 
 // computed
 const { isDarkMode, user } = storeToRefs(useRootStore())
-const { login } = useRootStore()
+const { updateAuthUser, logout } = useRootStore()
 const currentTheme = computed(() => isDarkMode.value ? darkTheme : undefined)
 
 const routerTitle = computed<string>(() => (
@@ -115,7 +115,7 @@ const showSignUpPopup = (val: boolean) => {
   isSignUpPopupVisible.value = val
 }
 
-const tokenKey = 'funnymovies-token'
+const tokenKey = String(import.meta.env.VITE_TOKEN_KEY) || 'funnymovies-token'
 const doSignIn = (e: MouseEvent) => {
   e.preventDefault()
   if (formRef.value) {
@@ -127,7 +127,8 @@ const doSignIn = (e: MouseEvent) => {
           if (data.success) {
             message.success('Sign in successfuly')
             setCookie(tokenKey, data.access_token)
-            login({ email })
+            updateAuthUser({ email })
+            formValue.value = { email: '', password: '' }
           } else {
             message.error(data.message)
           }
@@ -153,10 +154,5 @@ const doSignIn = (e: MouseEvent) => {
 
 const shareMovie = (e: MouseEvent) => {
   e.preventDefault()
-}
-
-const doLogout = (e: MouseEvent) => {
-  e.preventDefault()
-  setCookie(tokenKey, null)
 }
 </script>

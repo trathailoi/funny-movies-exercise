@@ -33,6 +33,10 @@ export class AppConfig {
     return this.getValue('API_VERSION', true)
   }
 
+  public getClientUrl() {
+    return this.getValue('CLIENT_URL', true) // || 'http://localhost:8080'
+  }
+
   public isProduction() {
     const mode = this.getValue('MODE', false)
     return mode === 'PROD' || process.env.NODE_ENV === 'production'

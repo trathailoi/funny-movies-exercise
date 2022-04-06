@@ -123,6 +123,7 @@ const onSignUpClick = (e: MouseEvent) => {
       message.loading('Signing up...')
       try {
         await signup(formValue.value)
+        message.destroyAll()
         message.success('Sign up successfully! Please sign in!')
         emit('close', false)
       } catch (err: any) {

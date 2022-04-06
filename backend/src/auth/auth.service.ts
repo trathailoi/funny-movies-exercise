@@ -25,11 +25,11 @@ export class AuthService {
   }
 
   async signup(entity) { // : Promise<InsertResult>
-    console.log('entity', entity)
+    // console.log('entity', entity)
     if (entity.password !== entity.confirmPassword) {
       throw new BadRequestException('Passwords do not match')
     }
-    delete entity.confirmPassword
+    // delete entity.confirmPassword
     const tmpUser: User = entity
     const salt = await bcrypt.genSalt()
     const hash = await bcrypt.hash(entity.password, salt)

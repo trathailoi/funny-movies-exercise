@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 
+import { useRootStore } from '@/stores/index'
+
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -42,12 +44,9 @@ const router = createRouter({
   }
 })
 
-router.afterEach((to, from) => {
-  const toDepth = to.path.split('/').length
-  const fromDepth = from.path.split('/').length
-  to.meta.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left'
-  document.title = to.meta.title as string || document.title
-  console.log('to.meta.transitionName', to.meta.transitionName)
+router.beforeEach(() => {
+  const { authCheck } = useRootStore()
+  authCheck()
 })
 
 export default router
