@@ -17,10 +17,14 @@
           </template>
           <template #extra>
             <n-space v-if="user && user.email">
-              <div class="flex items-center h-full">Welcome, {{ user.email }}</div>
-              <n-button @click="shareMovie">
-                Share
-              </n-button>
+              <div class="flex items-center h-full">
+                Welcome, {{ user.email }}
+              </div>
+              <router-link :to="{ name: 'share' }" class="no-underline text-inherit">
+                <n-button>
+                  Share
+                </n-button>
+              </router-link>
               <n-button @click="logout">
                 Logout
               </n-button>
@@ -150,9 +154,5 @@ const doSignIn = (e: MouseEvent) => {
       }
     })
   }
-}
-
-const shareMovie = (e: MouseEvent) => {
-  e.preventDefault()
 }
 </script>

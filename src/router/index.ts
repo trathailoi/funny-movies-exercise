@@ -6,7 +6,6 @@ import { useRootStore } from '@/stores/index'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'home',
     component: () => import('@/layouts/default.vue'),
     meta: {
       breadcrumbs: [
@@ -18,6 +17,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/',
         name: 'home',
         component: () => import('@/views/PageHome.vue')
+      },
+      { // Share
+        path: 'share',
+        name: 'share',
+        component: () => import('@/views/PageShare.vue')
       },
       { // 404
         path: '/:pathMatch(.*)',

@@ -118,6 +118,7 @@ const hitThumb = async (mit: movieItem, actionType: LikeType) => {
 }
 
 onMounted(() => {
+  console.log('onMounted')
   fetchMovies()
 })
 </script>
