@@ -9,6 +9,8 @@ import {
 } from '@nestjs/swagger'
 import { joiPassword } from 'joi-password'
 
+import { appConfig } from '../app.config'
+
 import { AuthService } from './auth.service'
 import { LocalAuthGuard } from './local-auth.guard'
 import { MzPublic } from '../app/common/decorator/public.decorator'
@@ -94,12 +96,25 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async login(@Request() req, @Res({ passthrough: true }) response: Response) {
     const result = await this.authService.login(req.user)
-    response.cookie('funnymovies-token', result.access_token, {
+    response.cookie(appConfig.getAuthTokenKey(), result.access_token, {
       expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
       httpOnly: true,
       secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
     })
     response.status(200).json(result)
+  }
+
+  @Get('logout')
+  @ApiOperation({ summary: 'remove the jwt token from cookie' })
+  @HttpCode(HttpStatus.OK)
+  async logout(@Request() req, @Res({ passthrough: true }) response: Response) {
+    response.clearCookie(appConfig.getAuthTokenKey(), {
+      expires: new Date(0),
+      httpOnly: true,
+      secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
+    })
+    // NOTE: should I blacklist the jwt token at this point?
+    response.status(200)
   }
 
   @Get('check')

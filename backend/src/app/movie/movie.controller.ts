@@ -12,6 +12,7 @@ import * as Joi from 'joi'
 import { Mapper } from '../common/mapper'
 import { JoiValidationPipe } from '../common/validation.pipe'
 import { MzSwaggerAuth } from '../common/decorator/swagger-auth.decorator'
+import { MzPublic } from '../common/decorator/public.decorator'
 
 import { Movie } from './movie.entity'
 import { MovieService } from './movie.service'
@@ -42,12 +43,12 @@ export class MovieController {
       desc: Joi.string().required(),
       thumbnailPath: Joi.string(),
       srcPath: Joi.string(),
-      author: Joi.string().guid().required()
+      author: Joi.string().guid()
     })
   }))
   async create(@Body() movieDto: MovieDto, @Req() req) {
     try {
-      const result = await this.movieService.create(this.mapper.map(MovieDto, Movie, movieDto), req.user)
+      const result = await this.movieService.create(this.mapper.map(MovieDto, Movie, { ...movieDto, ...(movieDto.author ? {} : { author: req.user.id }) }), req.user)
       return result.identifiers[0]
     } catch (error) {
       throw new BadRequestException(error)
@@ -55,7 +56,6 @@ export class MovieController {
   }
 
   @Get()
-  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'get movies with reactions' })
   @ApiOkResponse({ type: Movie, isArray: true })
   @UsePipes(new JoiValidationPipe({
@@ -71,36 +71,41 @@ export class MovieController {
   @ApiQuery({
     name: 'currentPage', required: false, schema: { minimum: 1 }, description: 'Current page.'
   })
+  @MzPublic()
+  @HttpCode(HttpStatus.OK)
   async findAll(@Query('pageSize') pageSize: number, @Query('currentPage') currentPage: number) {
-    try {
-      const { data, count } = await this.movieService.findAll({
-        pagination: {
-          pageSize,
-          currentPage
-        },
-        relations: ['reactions', 'reactions.user'],
-        select: [
-          'id', 'title', 'desc', 'thumbnailPath', 'srcPath', 'author'
-          // 'reactions.action', 'reactions.user',
-          // 'reactions.user.id', 'reactions.user.email'
-        ]
-      })
-      return {
-        data: data.map((m: Movie) => ({
-          id: m.id,
-          title: m.title,
-          desc: m.desc,
-          thumbnailPath: m.thumbnailPath,
-          srcPath: m.srcPath,
-          author: m.author,
-          likes: m.reactions.filter((r) => r.action === 'like').map((r) => r.user.id),
-          dislikes: m.reactions.filter((r) => r.action === 'dislike').map((r) => r.user.id)
-        })),
-        count
-      }
-    } catch (error) {
-      throw new BadRequestException(error)
+    // try {
+    const { data, count } = await this.movieService.findAll({
+      pagination: {
+        pageSize,
+        currentPage
+      },
+      relations: ['author', 'reactions', 'reactions.user'],
+      select: [
+        'id', 'title', 'desc', 'thumbnailPath', 'srcPath', 'author'
+        // 'reactions.action', 'reactions.user',
+        // 'reactions.user.id', 'reactions.user.email'
+      ]
+    })
+    return {
+      data: data.map((m: Movie) => ({
+        id: m.id,
+        title: m.title,
+        desc: m.desc,
+        thumbnailPath: m.thumbnailPath,
+        srcPath: m.srcPath,
+        author: m.author && m.author.id ? {
+          id: m.author.id,
+          email: m.author.email
+        } : {},
+        likes: m.reactions.filter((r) => r.action === 'like').map((r) => r.user.id),
+        dislikes: m.reactions.filter((r) => r.action === 'dislike').map((r) => r.user.id)
+      })),
+      count
     }
+    // } catch (error) {
+    //   throw new BadRequestException(error)
+    // }
   }
 
   @Get(':id')
@@ -176,7 +181,7 @@ export class MovieController {
   }
 
   @Patch(':id/reactions')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  // @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'react a movie' })
   @ApiNoContentResponse()
   @ApiBadRequestResponse()
@@ -193,8 +198,21 @@ export class MovieController {
     // TODO: need to implement ExceptionFilter at global scope for such cases
     // try {
     await this.reactionService.react(this.mapper.map(ReactionDto, Reaction, { movie: id, action, user: req.user.id }))
+    const result = await this.reactionService.getReactions(id)
     return {
-      message: 'success'
+      message: 'success',
+      likes: result.reduce((ls: string[], r: Reaction) => {
+        if (r.action === 'like') {
+          ls.push(r.user.id)
+        }
+        return ls
+      }, []),
+      dislikes: result.reduce((dls: string[], r: Reaction) => {
+        if (r.action === 'dislike') {
+          dls.push(r.user.id)
+        }
+        return dls
+      }, [])
     }
     // } catch (error) {
     //   throw new BadRequestException(error)

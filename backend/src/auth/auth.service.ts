@@ -6,6 +6,8 @@ import { classToPlain } from 'class-transformer'
 import { User } from '../user/user.entity'
 import { UserService } from '../user/user.service'
 
+import { IAuthUser } from './auth.interface'
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -25,7 +27,6 @@ export class AuthService {
   }
 
   async signup(entity) { // : Promise<InsertResult>
-    // console.log('entity', entity)
     if (entity.password !== entity.confirmPassword) {
       throw new BadRequestException('Passwords do not match')
     }
@@ -37,11 +38,18 @@ export class AuthService {
     return this.userService.insert(tmpUser)
   }
 
-  async login(user: any) {
-    const payload = { email: user.email, id: user.id }
+  async login(user: IAuthUser) {
+    const payload: IAuthUser = {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      fullName: user.fullName
+    }
     return {
       success: true,
-      access_token: this.jwtService.sign(payload)
+      access_token: this.jwtService.sign(payload),
+      user: payload
     }
   }
 }

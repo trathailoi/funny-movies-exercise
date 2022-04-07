@@ -127,7 +127,7 @@ const doSignIn = (e: MouseEvent) => {
           if (data.success) {
             message.success('Sign in successfuly')
             setCookie(tokenKey, data.access_token)
-            updateAuthUser({ email })
+            updateAuthUser(data.user)
             formValue.value = { email: '', password: '' }
           } else {
             message.error(data.message)

@@ -26,6 +26,7 @@ export class User extends BaseEntity implements IUser {
     lastName?: string
 
   @Exclude()
+  // @Column({ select: false })
   @Column()
     password: string
 
@@ -76,6 +77,18 @@ export class User extends BaseEntity implements IUser {
 
   @Expose()
   get fullName(): string {
-    return `${this.firstName} ${this.lastName}`
+    const names = []
+    if (this.firstName) {
+      names.push(this.firstName)
+    }
+    if (this.lastName) {
+      names.push(this.lastName)
+    }
+    return names.join(' ')
+  }
+
+  toJSON() {
+    delete this.password
+    return this
   }
 }

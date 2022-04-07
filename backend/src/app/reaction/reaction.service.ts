@@ -32,4 +32,12 @@ export class ReactionService extends BaseService<Reaction> {
       await this.repo.delete(currentOne.id)
     }
   }
+
+  async getReactions(movie: string): Promise<Reaction[]> {
+    const result = await this.repo.find({
+      where: { movie },
+      relations: ['user']
+    })
+    return result
+  }
 }

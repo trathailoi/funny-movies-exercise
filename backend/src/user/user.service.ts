@@ -2,20 +2,22 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { InsertResult, Repository } from 'typeorm'
 import * as bcrypt from 'bcrypt'
+
+import { BaseService } from '../app/common/base.service'
 import { User } from './user.entity'
 
 @Injectable()
-export class UserService {
-  constructor(
-    @InjectRepository(User) private readonly repository: Repository<User>
-  ) {}
+export class UserService extends BaseService<User> {
+  constructor(@InjectRepository(User) private readonly repo: Repository<User>) {
+    super(repo)
+  }
 
   async findOne(email: string): Promise<User | undefined> {
-    return this.repository.findOne({ email })
+    return this.repo.findOne({ email })
   }
 
   async insert(u) {
-    return this.repository.insert(u)
+    return this.repo.insert(u)
   }
 
   async create(entity: User): Promise<InsertResult> {
@@ -23,6 +25,6 @@ export class UserService {
     const salt = await bcrypt.genSalt()
     const hash = await bcrypt.hash(entity.password, salt)
     tmpUser.password = hash
-    return this.repository.insert(tmpUser)
+    return this.repo.insert(tmpUser)
   }
 }

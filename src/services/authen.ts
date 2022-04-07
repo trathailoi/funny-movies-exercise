@@ -6,8 +6,10 @@ const api = axios.create({
 
 const signup = (payload: { email: string, password: string, confirmPassword: string }) => api.post('/authen/signup', payload)
 const signin = (payload: { email: string, password: string }) => api.post('/authen/signin', payload)
+const signout = () => api.get('/authen/logout', { withCredentials: true })
 
 export {
   signup,
-  signin
+  signin,
+  signout
 }

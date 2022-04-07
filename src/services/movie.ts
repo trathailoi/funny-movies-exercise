@@ -6,7 +6,7 @@ const api = axios.create({
 })
 
 const getMovies = (params?: { pageSize?: number, currentPage?: number }) => api.get('/movies', { params })
-const reactOnMovie = (params: { movieId: string, action: string }) => api.patch(`/movies/${params.movieId}/reactions`, { params: { action: params.action } })
+const reactOnMovie = (params: { movieId: string, action: string }) => api.patch(`/movies/${params.movieId}/reactions?action=${params.action}`)
 
 export {
   getMovies,

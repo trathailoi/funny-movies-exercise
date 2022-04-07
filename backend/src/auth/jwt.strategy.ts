@@ -4,23 +4,25 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Request } from 'express'
 
-const tokenKey = 'funnymovies-token'
+import { appConfig } from '../app.config'
+import { IAuthUser } from './auth.interface'
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private configService: ConfigService) {
     super({
       // jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       jwtFromRequest: ExtractJwt.fromExtractors([
-        (request: Request) => request?.cookies[tokenKey] || null,
+        (request: Request) => request.cookies[appConfig.getAuthTokenKey()] || null,
         ExtractJwt.fromAuthHeaderAsBearerToken(),
-        ExtractJwt.fromUrlQueryParameter(tokenKey)
+        ExtractJwt.fromUrlQueryParameter(appConfig.getAuthTokenKey())
       ]),
       ignoreExpiration: false,
       secretOrKey: configService.get<string>('JWT_SECRET')
     })
   }
 
-  async validate(payload: any) {
-    return { id: payload.id, email: payload.email }
+  async validate(payload: IAuthUser) {
+    return payload
   }
 }

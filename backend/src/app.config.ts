@@ -37,6 +37,10 @@ export class AppConfig {
     return this.getValue('CLIENT_URL', true) // || 'http://localhost:8080'
   }
 
+  public getAuthTokenKey() {
+    return this.getValue('AUTH_TOKEN_KEY', true) // || 'http://localhost:8080'
+  }
+
   public isProduction() {
     const mode = this.getValue('MODE', false)
     return mode === 'PROD' || process.env.NODE_ENV === 'production'

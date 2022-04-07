@@ -1,5 +1,5 @@
 import {
-  Entity, PrimaryGeneratedColumn, Column, OneToMany
+  Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne
 } from 'typeorm'
 
 import { BaseEntity } from '../common/base.entity'
@@ -38,10 +38,7 @@ export class Movie extends BaseEntity implements IMovie {
   })
     srcPath: string
 
-  @Column('varchar', {
-    nullable: false,
-    length: 300
-  })
+  @ManyToOne('User', 'movie')
     author: IUser
 
   @OneToMany('Reaction', 'movie', {
