@@ -10,10 +10,6 @@ export class funnymovie1649300143197 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "lastName" DROP NOT NULL`);
         await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "createdAt" SET DEFAULT 'now()'`);
         await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "modifiedAt" SET DEFAULT 'now()'`);
-        await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "firstName" DROP NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "lastName" DROP NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "createdAt" SET DEFAULT 'now()'`);
-        await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "modifiedAt" SET DEFAULT 'now()'`);
         await queryRunner.query(`ALTER TABLE "movie" ADD CONSTRAINT "FK_4e9f6e68788d5eae5488a758008" FOREIGN KEY ("createdById") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "movie" ADD CONSTRAINT "FK_dbc0d4129de7b51ec6fc2126883" FOREIGN KEY ("modifiedById") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "movie" ADD CONSTRAINT "FK_d9154cda59a72e184b0384776ac" FOREIGN KEY ("authorId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
@@ -31,10 +27,6 @@ export class funnymovie1649300143197 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "movie" DROP CONSTRAINT "FK_d9154cda59a72e184b0384776ac"`);
         await queryRunner.query(`ALTER TABLE "movie" DROP CONSTRAINT "FK_dbc0d4129de7b51ec6fc2126883"`);
         await queryRunner.query(`ALTER TABLE "movie" DROP CONSTRAINT "FK_4e9f6e68788d5eae5488a758008"`);
-        await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "modifiedAt" SET DEFAULT '2022-04-07 02:54:49.364215+00'`);
-        await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "createdAt" SET DEFAULT '2022-04-07 02:54:49.364215+00'`);
-        await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "lastName" SET NOT NULL`);
-        await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "firstName" SET NOT NULL`);
         await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "modifiedAt" SET DEFAULT '2022-04-07 02:54:49.364215+00'`);
         await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "createdAt" SET DEFAULT '2022-04-07 02:54:49.364215+00'`);
         await queryRunner.query(`ALTER TABLE "user" ALTER COLUMN "lastName" SET NOT NULL`);

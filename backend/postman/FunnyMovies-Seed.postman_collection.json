@@ -1,0 +1,328 @@
+{
+	"info": {
+		"_postman_id": "c03bba3c-92a6-4a84-93aa-a6881b8a846e",
+		"name": "FunnyMovies",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Seed DB",
+			"item": [
+				{
+					"name": "Sign Up (acc 1)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set('acc1Email', pm.variables.replaceIn('{{$randomEmail}}'))"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json()",
+									"pm.collectionVariables.set('acc1Id', jsonData.id)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{acc1Email}}\",\n    \"password\": \"{{validPwd}}\",\n    \"confirmPassword\": \"{{validPwd}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/authen/signup",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"authen",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign Up (acc 2)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set('acc2Email', pm.variables.replaceIn('{{$randomEmail}}'))"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json()",
+									"pm.collectionVariables.set('acc2Id', jsonData.id)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{acc2Email}}\",\n    \"password\": \"{{validPwd}}\",\n    \"confirmPassword\": \"{{validPwd}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/authen/signup",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"authen",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign In (acc 1)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json()",
+									"pm.collectionVariables.set('jwt_token', jsonData.access_token)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{acc1Email}}\",\n    \"password\": \"{{validPwd}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/authen/signin",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"authen",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new movie 1",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"{{$randomWords}}\",\n  \"desc\": \"{{$randomLoremParagraph}}\",\n  \"thumbnailPath\": \"https://via.placeholder.com/350x250\",\n  \"srcPath\": \"/path/to/movie.mp4\",\n  \"author\": \"{{acc2Id}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/movies",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new movie 2",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"{{$randomWords}}\",\n  \"desc\": \"{{$randomLoremParagraph}}\",\n  \"thumbnailPath\": \"https://via.placeholder.com/350x250\",\n  \"srcPath\": \"/path/to/movie.mp4\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/movies",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new movie 3",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"{{$randomWords}}\",\n  \"desc\": \"{{$randomLoremParagraph}}\",\n  \"thumbnailPath\": \"https://via.placeholder.com/350x250\",\n  \"srcPath\": \"/path/to/movie.mp4\",\n  \"author\": \"{{acc2Id}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/movies",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000/api/v1.0"
+		},
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Inp4Y0BnbWFpbC5jb20iLCJpZCI6IjkwMTA4Y2ExLWI4YjAtNDFjZi1hZjg2LTRkNGY3ZTIyZjE0OSIsImlhdCI6MTYzOTEwNDg5NCwiZXhwIjoxNjM5MTkxMjk0fQ.TfTAXZP9fr3vgbdOt0-yE85mj9kINSxnjOwbsuI7Z34"
+		},
+		{
+			"key": "jwt_token",
+			"value": ""
+		},
+		{
+			"key": "acc1Email",
+			"value": ""
+		},
+		{
+			"key": "acc1Id",
+			"value": ""
+		},
+		{
+			"key": "acc2Email",
+			"value": ""
+		},
+		{
+			"key": "acc2Id",
+			"value": ""
+		}
+	]
+}

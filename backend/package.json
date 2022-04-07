@@ -9,6 +9,7 @@
     "db:start": "docker-compose -f docker-compose.database.yml up -d",
     "db:stop": "docker-compose -f docker-compose.database.yml down",
     "db:drop": "npm run typeorm -- schema:drop",
+    "db:seed": "npx --yes newman run --env-var BASE_URL=http://localhost:3000/api/v1.0 --env-var validPwd=Y0uKnowWh@tItIs ./postman/FunnyMovies-Seed.postman_collection.json",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "prestart": "npm run pretypeorm",
