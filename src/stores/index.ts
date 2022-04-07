@@ -1,3 +1,4 @@
+import type { Router } from 'vue-router'
 import { defineStore } from 'pinia'
 import { useOsTheme } from 'naive-ui'
 
@@ -5,6 +6,12 @@ import axios from 'axios'
 
 import { setCookie } from '@/utils/index'
 import { signout } from '@/services/authen'
+
+declare module 'pinia' {
+  export interface PiniaCustomProperties {
+    router: Router
+  }
+}
 
 const osThemeRef = useOsTheme()
 
@@ -46,12 +53,13 @@ export const useRootStore = defineStore('rootStore', {
       signout()
       setCookie(tokenKey, '', 0)
       this.user = {}
+      this.router.push({ name: 'home' })
     },
-    async authCheck() {
+    async authCheck(): Promise<IUser> {
       try {
         const result = await authCheckSvc()
         if (result.status === 401) {
-          // router.push('/auth/login')
+          // this.router.push({ name: 'home' })
         } else if (result && result.data) {
           this.updateAuthUser(result.data)
           return result.data

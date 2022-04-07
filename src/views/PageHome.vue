@@ -1,5 +1,5 @@
 <template>
-  <n-list>
+  <n-list class="max-w-screen-md m-auto">
     <template v-if="loading">
       <n-list-item>
         <n-grid x-gap="12" :cols="2">

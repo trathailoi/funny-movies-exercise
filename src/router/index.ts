@@ -21,7 +21,10 @@ const routes: Array<RouteRecordRaw> = [
       { // Share
         path: 'share',
         name: 'share',
-        component: () => import('@/views/PageShare.vue')
+        component: () => import('@/views/PageShare.vue'),
+        meta: {
+          authen: true
+        }
       },
       { // 404
         path: '/:pathMatch(.*)',
@@ -31,13 +34,7 @@ const routes: Array<RouteRecordRaw> = [
       { // About
         path: 'about',
         name: 'about',
-        component: () => import('@/views/PageAbout.vue'),
-        meta: {
-          breadcrumbs: [
-            { text: 'Home', to: { name: 'home' } },
-            { text: 'About', to: { name: 'about' } }
-          ]
-        }
+        component: () => import('@/views/PageAbout.vue')
       }
     ]
   }
@@ -53,9 +50,15 @@ const router = createRouter({
   }
 })
 
-router.beforeEach(() => {
+router.beforeEach((to, from, next) => {
   const { authCheck } = useRootStore()
-  authCheck()
+  authCheck().then(auth => {
+    if ((to.meta.authen === true) && !auth.email) {
+      next({ name: 'home' })
+    } else {
+      next()
+    }
+  }).finally(() => next())
 })
 
 export default router
