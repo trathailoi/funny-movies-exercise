@@ -149,9 +149,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/authen/signin",
+							"raw": "{{BASE_URL}}/authen/signin",
 							"host": [
-								"{{baseUrl}}"
+								"{{BASE_URL}}"
 							],
 							"path": [
 								"authen",
@@ -297,7 +297,7 @@
 	],
 	"variable": [
 		{
-			"key": "baseUrl",
+			"key": "BASE_URL",
 			"value": "http://localhost:3000/api/v1.0"
 		},
 		{

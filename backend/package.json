@@ -6,10 +6,10 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "db:start": "docker-compose -f docker-compose.database.yml up -d",
-    "db:stop": "docker-compose -f docker-compose.database.yml down",
+    "db:start": "docker-compose up -d funnymovies-db",
+    "db:stop": "docker-compose down funnymovies-db",
     "db:drop": "npm run typeorm -- schema:drop",
-    "db:seed": "npx --yes newman run --env-var BASE_URL=http://localhost:3000/api/v1.0 --env-var validPwd=Y0uKnowWh@tItIs ./postman/FunnyMovies-Seed.postman_collection.json",
+    "db:seed": "npx --yes newman run --env-var validPwd=Y0uKnowWh@tItIs ./postman/FunnyMovies-Seed.postman_collection.json",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "prestart": "npm run pretypeorm",
