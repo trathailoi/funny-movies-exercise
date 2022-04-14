@@ -57,7 +57,7 @@ class Mapper {
     this.createDefaultBiDiMap(
       ReactionDto,
       Reaction,
-      ['user', 'action', 'movie']
+      ['id', 'user', 'action', 'movie']
     )
 
     this.createDefaultBiDiMap(

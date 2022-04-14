@@ -1,23 +1,24 @@
 import {
-  InsertResult, UpdateResult, DeleteResult, Repository
+  // InsertResult, UpdateResult,
+  DeleteResult, Repository
 } from 'typeorm'
 import type { EntityId } from 'typeorm/repository/EntityId'
 import { FmLogger } from '../../logger/logger.service'
-import { User } from '../../user/user.entity'
+// import { User } from '../../user/user.entity'
 
 export class BaseService<T> {
   protected readonly logger = new FmLogger(this.constructor.name)
 
   constructor(protected readonly repository: Repository<T>) {}
 
-  create(entity: T | Array<T>, createdBy: User): Promise<InsertResult> {
-    const entities = Array.isArray(entity) ? entity : [entity]
-    return this.repository.insert(entities.map((e: T) => ({ ...e, createdBy })))
-  }
+  // create(entity: T | Array<T>, createdBy: User): Promise<InsertResult> {
+  //   const entities = Array.isArray(entity) ? entity : [entity]
+  //   return this.repository.insert(entities.map((e: T) => ({ ...e, createdBy })))
+  // }
 
-  update(id: EntityId, entity: T, modifiedBy: User): Promise<UpdateResult> {
-    return this.repository.update(id, { ...entity, modifiedBy })
-  }
+  // update(id: EntityId, entity: T, modifiedBy: User): Promise<UpdateResult> {
+  //   return this.repository.update(id, { ...entity, modifiedBy })
+  // }
 
   async findAll(queryObject?: { where?, relations?: string[], pagination?: { pageSize?: number, currentPage?: number }, order?, select? }): Promise<{ data: Array<T>, count: number }> {
     const defaultPaginationConf = { take: 20, skip: 0 } // skip: take * (page - 1)

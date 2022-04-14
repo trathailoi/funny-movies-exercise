@@ -12,8 +12,9 @@ import { Mapper } from '../common/mapper'
 import { JoiValidationPipe } from '../common/validation.pipe'
 import { MzSwaggerAuth } from '../common/decorator/swagger-auth.decorator'
 
-import { Reaction } from './reaction.entity'
+// import { Reaction } from './reaction.entity'
 import { ReactionService } from './reaction.service'
+import { ReactionDto } from './dto/reaction.dto'
 
 @ApiTags('reactions')
 @MzSwaggerAuth()
@@ -27,7 +28,7 @@ export class ReactionController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'for development purposes' })
-  @ApiOkResponse({ type: Reaction, isArray: false })
+  @ApiOkResponse({ type: ReactionDto, isArray: false })
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @UsePipes(new JoiValidationPipe({

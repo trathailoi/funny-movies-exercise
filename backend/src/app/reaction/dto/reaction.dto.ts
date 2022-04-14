@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger'
 
-export class ReactionDto implements Readonly<ReactionDto> {
+export class ReactionDto {
+  @ApiProperty({ example: '' })
+    id?: string
+
   @ApiProperty({ example: '' })
     user: string
 

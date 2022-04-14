@@ -2,15 +2,14 @@ import {
   Entity, Unique, PrimaryGeneratedColumn, Column, ManyToOne
 } from 'typeorm'
 
+import type { Movie } from '../movie/movie.entity'
+
 import { BaseEntity } from '../common/base.entity'
 import { User } from '../../user/user.entity'
-// import { Movie } from '../movie/movie.entity'
-import { IReaction } from './reaction.interface'
-import { IMovie } from '../movie/movie.interface'
 
 @Entity()
 @Unique('unique_reaction_index', ['user', 'action', 'movie'])
-export class Reaction extends BaseEntity implements IReaction {
+export class Reaction extends BaseEntity<Reaction> {
   @PrimaryGeneratedColumn('uuid')
     id!: string
 
@@ -20,7 +19,7 @@ export class Reaction extends BaseEntity implements IReaction {
   })
     action: string
 
-  @ManyToOne(() => User, (user) => user.id, {
+  @ManyToOne('User', 'reaction', {
     // cascade: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
@@ -34,5 +33,5 @@ export class Reaction extends BaseEntity implements IReaction {
     onUpdate: 'CASCADE',
     nullable: false
   })
-    movie: IMovie
+    movie: Movie
 }

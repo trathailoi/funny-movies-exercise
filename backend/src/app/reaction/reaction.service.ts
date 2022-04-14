@@ -3,17 +3,22 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
 import { BaseService } from '../common/base.service'
+import { Mapper } from '../common/mapper'
+import { ReactionDto } from './dto/reaction.dto'
 import { Reaction } from './reaction.entity'
 
 @Injectable()
 export class ReactionService extends BaseService<Reaction> {
-  constructor(@InjectRepository(Reaction) private readonly repo: Repository<Reaction>) {
+  constructor(
+    @InjectRepository(Reaction) private readonly repo: Repository<Reaction>,
+    private readonly mapper: Mapper
+  ) {
     super(repo)
   }
 
   allowTypes = ['like', 'dislike']
 
-  async react(entity: Reaction): Promise<void> {
+  async react(entity: ReactionDto): Promise<void> {
     const currentOne = await this.repo.findOne({
       where: {
         user: entity.user,
@@ -26,9 +31,9 @@ export class ReactionService extends BaseService<Reaction> {
         currentOne.action = entity.action
         await this.repo.save(currentOne)
       } else {
-        await this.repo.insert(entity)
+        await this.repo.save(this.mapper.map(ReactionDto, Reaction, entity))
       }
-    } else if (currentOne) {
+    } else if (currentOne) { // undo
       await this.repo.delete(currentOne.id)
     }
   }

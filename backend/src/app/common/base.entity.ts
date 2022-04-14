@@ -1,9 +1,9 @@
 import {
   PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, BaseEntity as SuperBaseEntity, ManyToOne
 } from 'typeorm'
-import { IUser } from '../../user/user.interface'
+import { User } from '../../user/user.entity'
 
-export abstract class BaseEntity extends SuperBaseEntity {
+export abstract class BaseEntity<T> extends SuperBaseEntity {
   @PrimaryGeneratedColumn('uuid')
     id?: string
 
@@ -42,10 +42,15 @@ export abstract class BaseEntity extends SuperBaseEntity {
     modifiedAt?: Date
 
   @ManyToOne('User', 'user')
-    createdBy?: IUser
+    createdBy?: User
 
   @ManyToOne('User', 'user', {
     nullable: true
   })
-    modifiedBy: IUser
+    modifiedBy: User
+
+  constructor(partial?: Partial<T>) {
+    super()
+    Object.assign(this, partial || {})
+  }
 }

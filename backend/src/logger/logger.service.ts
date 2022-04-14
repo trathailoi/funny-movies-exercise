@@ -17,14 +17,14 @@ export class FmLogger extends ConsoleLogger implements LoggerService {
     // super.debug(`isProduction: ${appConfig.isProduction()} --- isDebug: ${appConfig.isDebug()}`)
     if (!appConfig.isDebug()) {
       const lvs: LogLevel[] = ['error', 'warn', 'log']
-      super.warn(`get rid of "verbose" and "debug" logs on production, only ${lvs} logs will be shown`)
+      // super.log(`get rid of "verbose" and "debug" logs on production, only ${lvs} logs will be shown`)
       super.setLogLevels(lvs)
     }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private loggingSaving(...allTheArgs): void {
-    // TO DO: save logs to database
+    // TO DO: save logs to database here, or ELK stack will do it
     // console.log(allTheArgs)
   }
 

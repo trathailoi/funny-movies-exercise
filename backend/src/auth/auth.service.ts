@@ -31,11 +31,7 @@ export class AuthService {
       throw new BadRequestException('Passwords do not match')
     }
     // delete entity.confirmPassword
-    const tmpUser: User = entity
-    const salt = await bcrypt.genSalt()
-    const hash = await bcrypt.hash(entity.password, salt)
-    tmpUser.password = hash
-    return this.userService.insert(tmpUser)
+    return this.userService.create(entity)
   }
 
   async login(user: IAuthUser) {

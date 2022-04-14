@@ -7,7 +7,6 @@ import {
 import * as Joi from 'joi'
 import { joiPassword } from 'joi-password'
 
-import { Mapper } from '../app/common/mapper'
 // import { MzPublic } from '../app/common/decorator/public.decorator'
 import { JoiValidationPipe } from '../app/common/validation.pipe'
 import { CreateUserDto } from './dto/create-user.dto'
@@ -18,8 +17,7 @@ import { UserService } from './user.service'
 @Controller('users')
 export class UserController {
   constructor(
-    private readonly userService: UserService,
-    private readonly mapper: Mapper
+    private readonly userService: UserService
   ) {}
 
   @Post()
@@ -57,7 +55,7 @@ export class UserController {
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createUserDto: CreateUserDto) {
     try {
-      const result = await this.userService.create(this.mapper.map(CreateUserDto, User, createUserDto))
+      const result = await this.userService.create(createUserDto)
       return result.identifiers[0]
     } catch (error) {
       throw new BadRequestException(error)
@@ -66,7 +64,7 @@ export class UserController {
 
   @Get()
   @ApiOperation({ summary: 'get users (for development purpose)' })
-  @ApiOkResponse({ type: User, isArray: true })
+  // @ApiOkResponse({ type: User, isArray: true })
   @UsePipes(new JoiValidationPipe({
     query: Joi.object({
       pageSize: Joi.number().integer().min(1).max(50)
@@ -86,7 +84,7 @@ export class UserController {
       pagination: {
         pageSize,
         currentPage
-      },
+      }
       // select: ['id', 'email', 'firstName', 'lastName']
     })
   }

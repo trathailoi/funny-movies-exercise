@@ -2,15 +2,13 @@ import {
   Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne
 } from 'typeorm'
 
-import { BaseEntity } from '../common/base.entity'
-// import { Reaction } from '../reaction/reaction.entity'
-import { IReaction } from '../reaction/reaction.interface'
+import type { Reaction } from '../reaction/reaction.entity'
+import type { User } from '../../user/user.entity'
 
-import { IMovie } from './movie.interface'
-import { IUser } from '../../user/user.interface'
+import { BaseEntity } from '../common/base.entity'
 
 @Entity()
-export class Movie extends BaseEntity implements IMovie {
+export class Movie extends BaseEntity<Movie> {
   @PrimaryGeneratedColumn('uuid')
     id!: string
 
@@ -39,7 +37,7 @@ export class Movie extends BaseEntity implements IMovie {
     srcPath: string
 
   @ManyToOne('User', 'movie')
-    author: IUser
+    author: User
 
   @OneToMany('Reaction', 'movie', {
     cascade: true,
@@ -47,5 +45,5 @@ export class Movie extends BaseEntity implements IMovie {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE'
   })
-    reactions?: IReaction[]
+    reactions?: Reaction[]
 }
