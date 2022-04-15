@@ -4,7 +4,7 @@ import { User } from '../../user/user.entity'
 import { MovieController } from './movie.controller'
 import { MovieService } from './movie.service'
 import { ReactionService } from '../reaction/reaction.service'
-import { Reaction } from '../reaction/reaction.entity'
+import { Reaction, ReactionType } from '../reaction/reaction.entity'
 import { Mapper } from '../common/mapper'
 
 describe('MovieController', () => {
@@ -64,7 +64,7 @@ describe('MovieController', () => {
           id: '456_like_1',
           email: 'zxc@zxc.zxc'
         }),
-        action: 'like'
+        action: ReactionType.like
       }),
       new Reaction({
         id: '123',
@@ -72,7 +72,7 @@ describe('MovieController', () => {
           id: '456_dislike_1',
           email: 'zxc@zxc.zxc'
         }),
-        action: 'dislike'
+        action: ReactionType.dislike
       }),
       new Reaction({
         id: '123',
@@ -80,7 +80,7 @@ describe('MovieController', () => {
           id: '456_dislike_2',
           email: 'zxc@zxc.zxc'
         }),
-        action: 'dislike'
+        action: ReactionType.dislike
       }),
       new Reaction({
         id: '123',
@@ -88,7 +88,7 @@ describe('MovieController', () => {
           id: '456_like_2',
           email: 'zxc@zxc.zxc'
         }),
-        action: 'like'
+        action: ReactionType.like
       })
     ]
     it('should "like" successfully', async () => {
@@ -101,7 +101,7 @@ describe('MovieController', () => {
             id: '234',
             email: 'zxc@zxc.zxc'
           }),
-          action: 'like'
+          action: ReactionType.like
         })
       ])
 
@@ -131,7 +131,7 @@ describe('MovieController', () => {
             id: '234',
             email: 'zxc@zxc.zxc'
           }),
-          action: 'dislike'
+          action: ReactionType.dislike
         })
       ])
 
