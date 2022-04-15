@@ -9,14 +9,14 @@ services:
       - ./nginx/default.conf:/etc/nginx/templates/default.conf.template:ro
       - ./dist:/usr/share/nginx/html
     environment:
-      - VIRTUAL_HOST=funny-movies.loitra.xyz
-      - LETSENCRYPT_HOST=funny-movies.loitra.xyz
+      - VIRTUAL_HOST=funny-movies-dev.loitra.xyz
+      - LETSENCRYPT_HOST=funny-movies-dev.loitra.xyz
       - LETSENCRYPT_EMAIL=trathailoi@gmail.com
       - API_URL=http://funnymovies-backend
       - API_HOST=funnymovies-backend
     command: nginx -g 'daemon off;'
     healthcheck:
-      test: ["CMD-SHELL", "wget -O /dev/null http://funny-movies.loitra.xyz/nginx-health || exit 1"]
+      test: ["CMD-SHELL", "wget -O /dev/null http://funny-movies-dev.loitra.xyz/nginx-health || exit 1"]
       timeout: 5s
       retries: 10
     depends_on:
@@ -34,7 +34,7 @@ services:
       - ./backend/.env
     environment:
       - MODE=DEV
-      - CLIENT_URL=http://funny-movies.loitra.xyz
+      - CLIENT_URL=http://funny-movies-dev.loitra.xyz
       - POSTGRES_HOST=funnymovies-db
     volumes:
       - ./backend:/usr/src/app
