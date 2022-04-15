@@ -1,14 +1,15 @@
 name: Funny Movies CI
 
 on:
+  workflow_dispatch: {}
   push:
-    branches: [ funny-movies ]
+    branches: [ develop ]
     paths:
       - 'backend/**'
       - 'src/**'
       - '!**.spec.js'
   pull_request:
-    branches: [ funny-movies ]
+    branches: [ develop ]
     paths:
       - 'backend/**'
       - 'src/**'
