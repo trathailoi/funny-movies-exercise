@@ -1,7 +1,5 @@
+import 'dotenv/config'
 import { TypeOrmModuleOptions } from '@nestjs/typeorm'
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config()
 
 export class AppConfig {
   constructor(private env: { [k: string]: string | undefined }) { }
@@ -33,9 +31,22 @@ export class AppConfig {
     return this.getValue('API_VERSION', true)
   }
 
+  public getClientUrl() {
+    return this.getValue('CLIENT_URL', true) // || 'http://localhost:8080'
+  }
+
+  public getAuthTokenKey() {
+    return this.getValue('AUTH_TOKEN_KEY', true) // || 'http://localhost:8080'
+  }
+
   public isProduction() {
     const mode = this.getValue('MODE', false)
     return mode === 'PROD' || process.env.NODE_ENV === 'production'
+  }
+
+  public isTest() {
+    const mode = this.getValue('MODE', false)
+    return mode === 'TEST' || process.env.NODE_ENV === 'test'
   }
 
   public isDebug() {

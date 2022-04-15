@@ -1,0 +1,551 @@
+openapi: 3.0.0
+info:
+  description: |
+    An APIs design for Funny Movies
+  version: "1.0.0"
+  title: Funny Movies
+  contact:
+    email: trathailoi@gmail.com
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/trathailoi/my-first-API/1.0.0
+  - description: Please run the app locally on port 3000
+    url: 'http://localhost:3000/api'
+tags:
+  - name: user
+    description: Users
+  - name: movie
+    description: movies
+  - name: reaction
+    description: Reactions
+
+paths:
+  # Users
+  /users:
+    post:
+      tags:
+        - user
+      summary: Add a new user
+      operationId: create_User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User_Dto'
+        description: form data object that contains fields to update a specific user
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+    get:
+      tags:
+        - user
+      summary: Finds Users
+      description: Finds all the users
+      operationId: findAll_User
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+  '/users/{id}':
+    get:
+      tags:
+        - user
+      summary: Find user by ID
+      description: Returns a single user
+      operationId: findOne_User
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to return
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+    patch:
+      tags:
+        - user
+      summary: Updates an existing user by ID
+      operationId: update_User
+      parameters:
+        - name: id
+          in: path
+          description: ID of the user that needs to be updated
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User_Dto'
+        description: form data object that contains fields to update a specific user
+      responses:
+        '204':
+          $ref: '#/components/responses/204NoContent'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+    delete:
+      tags:
+        - user
+      summary: Deletes an user by ID
+      operationId: delete_User
+      parameters:
+        - name: id
+          in: path
+          description: User id to delete
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          $ref: '#/components/responses/204NoContent'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+
+
+  # movies
+  /movies:
+    post:
+      tags:
+        - movie
+      summary: create a new movie
+      operationId: create_Movie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Movie_Dto'
+        description: form data object that contains fields to update a specific movie
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+    get:
+      tags:
+        - movie
+      summary: get movies with reactions
+      description: get movies with reactions
+      operationId: findAll_Movie
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MovieDetail'
+  '/movies/{id}':
+    get:
+      tags:
+        - movie
+      summary: get a movie detail with reactions 
+      description: get a movie detail with reactions
+      operationId: findOne_Movie
+      parameters:
+        - name: id
+          in: path
+          description: ID of movie to return
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieDetail'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+    patch:
+      tags:
+        - movie
+      summary: Updates an existing movie by ID
+      operationId: update_Movie
+      parameters:
+        - name: id
+          in: path
+          description: ID of the movie that needs to be updated
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Movie_Dto'
+        description: form data object that contains fields to update a specific movie
+      responses:
+        '204':
+          $ref: '#/components/responses/204NoContent'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+    delete:
+      tags:
+        - movie
+      summary: Delete a movie by ID
+      operationId: delete_Movie
+      parameters:
+        - name: id
+          in: path
+          description: Movie id to delete
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          $ref: '#/components/responses/204NoContent'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+  '/movies/{id}/reactions':
+    patch:
+      tags:
+        - movie
+        - reaction
+      summary: React a movie
+      operationId: reactMovie_Movie
+      parameters:
+        - name: id
+          in: path
+          description: ID of the movie
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+        - name: action
+          in: query
+          description: do an action on a movie
+          schema:
+            type: string
+          examples:
+            example1:
+              value: "like"
+              summary: "Example #1"
+            example2:
+              value: "like-undo"
+              summary: "Example #2"
+            example3:
+              value: "dislike"
+              summary: "Example #3"
+            example4:
+              value: "dislike-undo"
+              summary: "Example #4"
+            example5:
+              value: "share"
+              summary: "Example #5"
+      # requestBody:
+      #   content:
+      #     application/json:
+      #       schema:
+      #         $ref: '#/components/schemas/MovieReaction'
+      #   description: pass the action type (like/dislike/share)
+      responses:
+        '204':
+          $ref: '#/components/responses/204NoContent'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+
+
+
+
+  # Reactions
+  # /reactions:
+  #   post:
+  #     tags:
+  #       - reaction
+  #     summary: Add a new reaction
+  #     operationId: create_Reaction
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/components/schemas/Reaction_Dto'
+  #       description: form data object that contains fields to update a specific reaction
+  #     responses:
+  #       '201':
+  #         description: Created
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/ReactionResponse'
+  #       '400':
+  #         $ref: '#/components/responses/400BadRequest'
+  #   get:
+  #     tags:
+  #       - reaction
+  #     summary: Finds Reactions
+  #     description: Finds all the reactions
+  #     operationId: findAll_Reaction
+  #     responses:
+  #       '200':
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: array
+  #               items:
+  #                 $ref: '#/components/schemas/ReactionResponse'
+  '/reactions/{id}':
+    get:
+      tags:
+        - reaction
+      summary: Find reaction by ID
+      description: Returns a single reaction
+      operationId: findOne_Reaction
+      parameters:
+        - name: id
+          in: path
+          description: ID of reaction to return
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReactionResponse'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+    delete:
+      tags:
+        - reaction
+      summary: Deletes a reaction by ID
+      operationId: delete_Reaction
+      parameters:
+        - name: id
+          in: path
+          description: Reaction id to delete
+          required: true
+          schema:
+            $ref: '#/components/schemas/uuid'
+      responses:
+        '204':
+          $ref: '#/components/responses/204NoContent'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+
+
+components:
+  schemas:
+    User_Dto: # Can be referenced as '#/components/schemas/User_Dto'
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          example: trathailoi@gmail.com
+        firstName:
+          type: string
+          example: Loi
+        lastName:
+          type: string
+          example: Tra
+        password:
+          type: string
+          example: youknowwhatitis
+    User: # Can be referenced as '#/components/schemas/User'
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/schemas/User_Dto'
+    UserResponse: # Can be referenced as '#/components/schemas/UserResponse'
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        email:
+          type: string
+          example: trathailoi@gmail.com
+        firstName:
+          type: string
+          example: Loi
+        lastName:
+          type: string
+          example: Tra
+
+
+
+    Movie_Dto: # Can be referenced as '#/components/schemas/Movie_Dto'
+      type: object
+      required:
+        - title
+        - desc
+      properties:
+        title:
+          type: string
+          example: Movie Title
+        desc:
+          type: string
+          example: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        thumbnailPath:
+          type: string
+          example: https://via.placeholder.com/150x150 # this is just for demo purpose, this should be a path instead of a full url
+        srcPath:
+          type: string
+          example: /path/to/movie.mp4
+        author:
+          $ref: '#/components/schemas/uuid'
+    Movie: # Can be referenced as '#/components/schemas/Movie'
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/schemas/Movie_Dto'
+    MovieDetail: # Can be referenced as '#/components/schemas/MovieDetail'
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/schemas/Movie_Dto'
+        - type: object
+          properties:
+            authorInfo:
+              $ref: '#/components/schemas/UserResponse'
+            reactions:
+              type: array
+              items:
+                $ref: '#/components/schemas/Reaction'
+
+
+
+    Reaction_Dto: # Can be referenced as '#/components/schemas/Reaction_Dto'
+      type: object
+      required:
+        - user
+        - action
+        - movie
+      properties:
+        user:
+          $ref: '#/components/schemas/uuid'
+        action:
+          type: string
+          enum: [like, dislike, share]
+          example: like
+        movie:
+          $ref: '#/components/schemas/uuid'
+    Reaction: # Can be referenced as '#/components/schemas/Reaction'
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/uuid'
+        - $ref: '#/components/schemas/Reaction_Dto'
+    ReactionResponse: # Can be referenced as '#/components/schemas/ReactionResponse'
+      type: object
+      required:
+        - user
+        - action
+        - movie
+      properties:
+        id:
+          $ref: '#/components/schemas/uuid'
+        user:
+          $ref: '#/components/schemas/User'
+        action:
+          type: string
+          enum: [like, dislike, share]
+          example: like
+        movie:
+          $ref: '#/components/schemas/Movie'
+    MovieReaction: # Can be referenced as '#/components/schemas/MovieReaction'
+      type: object
+      required:
+        - action
+      properties:
+        action:
+          type: string
+          enum: [like, dislike, share]
+          example: like
+
+    uuid: # Can be referenced as '#/components/schemas/uuid'
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      example: 5f36215d-f5c6-4896-087c-f30f3678f607
+
+  responses:
+    204NoContent: # Can be referenced as '#/components/responses/204NoContent'
+      description: No Content
+    404NotFound: # Can be referenced as '#/components/responses/404NotFound'
+      description: Not found. The resource was not found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 404
+              error:
+                type: string
+                example: Not Found
+              message:
+                type: string
+                example: Not Found
+    400BadRequest: # Can be referenced as '#/components/responses/400BadRequest'
+      description: Bad request. Invalid input supplied.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: integer
+                example: 400
+              error:
+                type: string
+                example: Bad Request
+              message:
+                type: string
+                example: '"title" is required'

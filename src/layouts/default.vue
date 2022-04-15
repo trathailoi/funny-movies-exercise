@@ -1,47 +1,75 @@
 <template>
   <n-config-provider :theme="currentTheme">
-    <n-layout has-sider class="h-screen">
-      <n-layout-sider
-        bordered
-        collapse-mode="width"
-        :collapsed-width="64"
-        :collapsed="collapsed"
-        show-trigger="bar"
-        :native-scrollbar="false"
-        @collapse="collapsed = true"
-        @expand="collapsed = false"
-      >
-        <n-menu
-          v-model:value="activeKey"
-          :collapsed="collapsed"
-          :collapsed-width="64"
-          :collapsed-icon-size="22"
-          :options="menuOptions"
-        />
-      </n-layout-sider>
-
+    <n-layout class="h-screen">
       <n-layout :native-scrollbar="false" class="p-6">
-        <n-switch v-model:value="isDarkMode" class="mb-3">
-          <template #checked>
-            🌙
+        <n-page-header :title="routerTitle" :subtitle="routerTitle">
+          <template #avatar>
+            <router-link :to="{ name: 'home' }" class="no-underline text-black dark:text-white">
+              <n-icon size="35">
+                <i-mdi-home />
+              </n-icon>
+            </router-link>
           </template>
-          <template #unchecked>
-            🌞
+          <template #title>
+            <router-link :to="{ name: 'home' }" class="no-underline text-black dark:text-white">
+              Funny Movies
+            </router-link>
           </template>
-        </n-switch>
-
-        <n-page-header :title="routerTitle">
-          <template #header>
-            <n-breadcrumb>
-              <n-breadcrumb-item v-for="breadcrumb in breadcrumbs" :key="breadcrumb.to.name">
-                <router-link v-if="$route.name !== breadcrumb.to.name" :to="(breadcrumb.to as RouteLocationRaw)">
-                  {{ breadcrumb.text }}
-                </router-link>
-                <span v-else>
-                  {{ breadcrumb.text }}
-                </span>
-              </n-breadcrumb-item>
-            </n-breadcrumb>
+          <template #extra>
+            <n-space v-if="user && user.email">
+              <div class="flex items-center h-full">
+                Welcome, {{ user.email }}
+              </div>
+              <router-link :to="{ name: 'share' }" class="no-underline text-inherit">
+                <n-button>
+                  Share
+                </n-button>
+              </router-link>
+              <n-button @click="logout">
+                Logout
+              </n-button>
+            </n-space>
+            <n-space v-else>
+              <n-form
+                ref="formRef"
+                inline
+                :model="formValue"
+                :rules="rules"
+                size="small"
+              >
+                <n-form-item label="Email" path="email">
+                  <n-input v-model:value="formValue.email" placeholder="Input Email" />
+                </n-form-item>
+                <n-form-item label="Password" path="password">
+                  <n-input
+                    v-model:value="formValue.password"
+                    type="password"
+                    @keydown.enter.prevent
+                  />
+                </n-form-item>
+                <n-form-item>
+                  <n-space>
+                    <n-button @click="doSignIn">
+                      Sign In
+                    </n-button>
+                    <n-button @click="$event.preventDefault();showSignUpPopup(true)">
+                      Sign Up
+                    </n-button>
+                  </n-space>
+                </n-form-item>
+              </n-form>
+              <PopupSignUp v-model:value="isSignUpPopupVisible" @close="showSignUpPopup(false)" />
+            </n-space>
+            <!-- <n-space>
+              <n-switch v-model:value="isDarkMode" class="mb-3">
+                <template #checked>
+                  🌙
+                </template>
+                <template #unchecked>
+                  🌞
+                </template>
+              </n-switch>
+            </n-space> -->
           </template>
         </n-page-header>
 
@@ -54,69 +82,81 @@
 </template>
 
 <script setup lang="ts">
-import { computed, h, ref } from 'vue'
-import { darkTheme, NIcon } from 'naive-ui'
+import { computed, ref } from 'vue'
+import { darkTheme, FormInst, useMessage } from 'naive-ui'
 import { useRoute, RouterLink } from 'vue-router'
-import type { RouteLocationRaw } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
 import { useRootStore } from '@/stores/index'
+import { setCookie } from '@/utils/index'
 
-import HomeIcon from '~icons/mdi/home'
-import AccountIcon from '~icons/mdi/account'
-import PhoneIcon from '~icons/mdi/phone'
-import ChartTimelineIcon from '~icons/mdi/chart-timeline'
-import DragVerticalVarianticon from '~icons/mdi/drag-vertical-variant'
-import InformationIcon from '~icons/mdi/information'
+import { signin } from '@/services/authen'
+import { rules } from '@/utils/input-validation'
+import PopupSignUp from '../views/PopupSignUp.vue'
 
+const message = useMessage()
 const route = useRoute()
-interface RouteBreadcrumb {
-  text: string
-  to: {
-    name: string
-    params?: object
-  }
-}
+const formRef = ref<FormInst | null>(null)
 
-const { isDarkMode } = storeToRefs(useRootStore())
+// data
+const isSignUpPopupVisible = ref(false)
+const formValue = ref({
+  email: '',
+  password: ''
+})
+const isSubmitting = ref(false)
+
+// computed
+const { isDarkMode, user } = storeToRefs(useRootStore())
+const { updateAuthUser, logout } = useRootStore()
 const currentTheme = computed(() => isDarkMode.value ? darkTheme : undefined)
 
-const menuOptions = [
-  {
-    label: 'Webapp Backend Starter',
-    key: 'title'
-  },
-  {
-    key: 'divider-2',
-    type: 'divider'
-  },
-  {
-    label: () => h(
-      RouterLink,
-      { to: { name: 'home' } },
-      { default: () => 'Home' }
-    ),
-    key: 'home',
-    icon: () => h(NIcon, null, { default: () => h(HomeIcon) })
-  },
-  {
-    label: () => h(
-      RouterLink,
-      { to: { name: 'about' } },
-      { default: () => 'About' }
-    ),
-    key: 'about',
-    icon: () => h(NIcon, null, { default: () => h(InformationIcon) })
-  }
-]
-const collapsed = ref(false)
-const activeKey = ref('')
-activeKey.value = menuOptions.find(mo => mo.key === route.name)?.key || ''
-
-const breadcrumbs = computed<RouteBreadcrumb[]>(() => (
-  ((route.meta && route.meta.breadcrumbs) || []) as RouteBreadcrumb[]
-))
 const routerTitle = computed<string>(() => (
   ((route.meta && route.meta.title) || '') as string
 ))
+
+// methods
+const showSignUpPopup = (val: boolean) => {
+  isSignUpPopupVisible.value = val
+}
+
+const tokenKey = String(import.meta.env.VITE_TOKEN_KEY) || 'funnymovies-token'
+const doSignIn = (e: MouseEvent) => {
+  e.preventDefault()
+  if (isSubmitting.value) return
+  if (formRef.value) {
+    isSubmitting.value = true
+    formRef.value?.validate(async (errors) => {
+      if (!errors) {
+        const { email, password } = formValue.value
+        try {
+          const { data } = await signin({ email, password })
+          if (data.success) {
+            message.success('Sign in successfuly')
+            setCookie(tokenKey, data.access_token)
+            updateAuthUser(data.user)
+            formValue.value = { email: '', password: '' }
+          } else {
+            message.error(data.message)
+          }
+        } catch (err: any) {
+          if (err.response) {
+            if (err.response.status === 401) {
+              message.error('The email or password is incorrect!')
+              // message.error(err.response.data.message)
+            } else {
+              message.error(err.message)
+            }
+          } else if (err.request) {
+            message.error(err.request)
+          } else {
+            // message.error('Something went wrong')
+            message.error(err.message)
+          }
+        }
+      }
+      isSubmitting.value = false
+    })
+  }
+}
 </script>

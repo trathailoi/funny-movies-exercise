@@ -6,7 +6,7 @@ import type { LogLevel } from '@nestjs/common'
 import { appConfig } from '../app.config'
 
 @Injectable({ scope: Scope.TRANSIENT })
-export class MzLogger extends ConsoleLogger implements LoggerService {
+export class FmLogger extends ConsoleLogger implements LoggerService {
   constructor(
     context: string,
     options?: {
@@ -17,14 +17,17 @@ export class MzLogger extends ConsoleLogger implements LoggerService {
     // super.debug(`isProduction: ${appConfig.isProduction()} --- isDebug: ${appConfig.isDebug()}`)
     if (!appConfig.isDebug()) {
       const lvs: LogLevel[] = ['error', 'warn', 'log']
-      super.warn(`get rid of "verbose" and "debug" logs on production, only ${lvs} logs will be shown`)
+      // super.log(`get rid of "verbose" and "debug" logs on production, only ${lvs} logs will be shown`)
       super.setLogLevels(lvs)
+    }
+    if (appConfig.isTest()) {
+      super.setLogLevels([])
     }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private loggingSaving(...allTheArgs): void {
-    // TO DO: save logs to database
+    // TO DO: save logs to database here, or ELK stack will do it
     // console.log(allTheArgs)
   }
 

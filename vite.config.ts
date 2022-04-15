@@ -169,7 +169,7 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       proxy: {
-        [env.VITE_BASE_API_PROXY_PREFIX || '/api/v1.0']: {
+        [env.VITE_BASE_API_VERSION || '/api/v1.0']: {
           target: env.VITE_BASE_API || 'http://localhost:3000',
           changeOrigin: true
         }

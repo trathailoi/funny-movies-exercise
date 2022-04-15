@@ -6,9 +6,12 @@ import {
 import { ConfigModule } from '@nestjs/config'
 import * as Joi from 'joi'
 import { TerminusModule } from '@nestjs/terminus'
-
 import { APP_GUARD } from '@nestjs/core'
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'
+
 import { appConfig } from './app.config'
+
+import { HealthController } from './health/health.controller'
 
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
@@ -20,8 +23,8 @@ import LogsMiddleware from './logger/logger.middleware'
 import { UserModule } from './user/user.module'
 import { AuthModule } from './auth/auth.module'
 import { JwtAuthGuard } from './auth/jwt-auth.guard'
-
-import { HealthController } from './health/health.controller'
+import { MovieModule } from './app/movie/movie.module'
+import { ReactionModule } from './app/reaction/reaction.module'
 
 @Module({
   imports: [
@@ -29,6 +32,8 @@ import { HealthController } from './health/health.controller'
     LoggerModule,
     TerminusModule,
     ConfigModule.forRoot({
+      // envFilePath: ['.env.test', '.env'],
+      ignoreEnvFile: true,
       validationSchema: Joi.object({
         POSTGRES_HOST: Joi.string().required(),
         POSTGRES_PORT: Joi.number().required(),
@@ -42,7 +47,13 @@ import { HealthController } from './health/health.controller'
       })
     }),
     UserModule,
-    AuthModule
+    AuthModule,
+    ReactionModule,
+    MovieModule,
+    ThrottlerModule.forRoot({
+      ttl: 30, // retry after 30 seconds
+      limit: 10 // limit to 10 requests per 30 seconds
+    })
 
     // AutomapperModule.forRoot({
     //   options: [{
@@ -59,6 +70,10 @@ import { HealthController } from './health/health.controller'
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard
     }
   ]
 })

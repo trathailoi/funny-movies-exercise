@@ -1,8 +1,8 @@
-FROM node:17-alpine AS development
-RUN apk add curl
+FROM node:17 AS development
+# RUN apk add curl
 WORKDIR /usr/src/app
 COPY package*.json ./
-RUN npm install glob rimraf
+# RUN npm install glob rimraf
 RUN npm install --only=development
 # should mount the project to /usr/src/app
 

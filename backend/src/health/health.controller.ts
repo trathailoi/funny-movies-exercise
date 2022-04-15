@@ -6,8 +6,12 @@ import {
   // DiskHealthIndicator,
   HealthCheck
 } from '@nestjs/terminus'
+import { ApiExcludeEndpoint } from '@nestjs/swagger'
+import { SkipThrottle } from '@nestjs/throttler'
+
 import { MzPublic } from '../app/common/decorator/public.decorator'
 
+@SkipThrottle()
 @Controller('health')
 export class HealthController {
   constructor(
@@ -20,6 +24,7 @@ export class HealthController {
   @Get()
   @HealthCheck()
   @MzPublic()
+  @ApiExcludeEndpoint()
   check() {
     return this.health.check([
       () => this.db.pingCheck('datatable', { timeout: 5000 }),

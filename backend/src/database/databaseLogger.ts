@@ -1,11 +1,11 @@
 import type { Logger as TypeOrmLogger, QueryRunner } from 'typeorm'
-import { MzLogger } from '../logger/logger.service'
+import { FmLogger } from '../logger/logger.service'
 import { appConfig } from '../app.config'
 
 const healthCheckQueryString = 'SELECT 1'
 
 class DatabaseLogger implements TypeOrmLogger {
-  private readonly logger = new MzLogger('SQL')
+  private readonly logger = new FmLogger('SQL')
 
   logQuery(query: string, parameters?: unknown[], queryRunner?: QueryRunner) {
     if (this.skipLoggingCheck(query, parameters, queryRunner)) {

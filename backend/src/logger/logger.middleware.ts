@@ -1,11 +1,11 @@
 import { Injectable, NestMiddleware } from '@nestjs/common'
 import { Request, Response, NextFunction } from 'express'
 
-import { MzLogger } from './logger.service'
+import { FmLogger } from './logger.service'
 
 @Injectable()
 class LogsMiddleware implements NestMiddleware {
-  protected readonly logger = new MzLogger('HTTP')
+  protected readonly logger = new FmLogger('HTTP')
 
   use(request: Request, response: Response, next: NextFunction) {
     response.on('finish', () => {

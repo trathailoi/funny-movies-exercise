@@ -1,7 +1,9 @@
 import {
-  BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique, UpdateDateColumn
+  BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique, UpdateDateColumn, OneToMany
 } from 'typeorm'
 import { Exclude, Expose } from 'class-transformer'
+
+import type { Movie } from '../app/movie/movie.entity'
 
 @Entity()
 export class User extends BaseEntity {
@@ -12,13 +14,18 @@ export class User extends BaseEntity {
   @Column()
     email: string
 
-  @Column()
-    firstName: string
+  @Column({
+    nullable: true
+  })
+    firstName?: string
 
-  @Column()
-    lastName: string
+  @Column({
+    nullable: true
+  })
+    lastName?: string
 
   @Exclude()
+  // @Column({ select: false })
   @Column()
     password: string
 
@@ -41,6 +48,14 @@ export class User extends BaseEntity {
   })
     modifiedAt?: Date
 
+  @OneToMany('Movie', 'user', {
+    cascade: true,
+    // // nullable: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+  })
+    movies?: Movie[]
+
   // @CreateDateColumn({
   //   default: 'now()',
   //   update: false,
@@ -61,6 +76,18 @@ export class User extends BaseEntity {
 
   @Expose()
   get fullName(): string {
-    return `${this.firstName} ${this.lastName}`
+    const names = []
+    if (this.firstName) {
+      names.push(this.firstName)
+    }
+    if (this.lastName) {
+      names.push(this.lastName)
+    }
+    return names.join(' ')
+  }
+
+  toJSON() {
+    delete this.password
+    return this
   }
 }

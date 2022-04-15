@@ -1,8 +1,12 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, BadRequestException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt'
 import { classToPlain } from 'class-transformer'
+
+import { User } from '../user/user.entity'
 import { UserService } from '../user/user.service'
+
+import { IAuthUser } from './auth.interface'
 
 @Injectable()
 export class AuthService {
@@ -22,10 +26,26 @@ export class AuthService {
     return null
   }
 
-  async login(user: any) {
-    const payload = { email: user.email, id: user.id }
+  async signup(entity) { // : Promise<InsertResult>
+    if (entity.password !== entity.confirmPassword) {
+      throw new BadRequestException('Passwords do not match')
+    }
+    // delete entity.confirmPassword
+    return this.userService.create(entity)
+  }
+
+  async login(user: IAuthUser) {
+    const payload: IAuthUser = {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      fullName: user.fullName
+    }
     return {
-      access_token: this.jwtService.sign(payload)
+      success: true,
+      access_token: this.jwtService.sign(payload),
+      user: payload
     }
   }
 }

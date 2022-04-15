@@ -1,10 +1,11 @@
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 
+import { useRootStore } from '@/stores/index'
+
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'home',
     component: () => import('@/layouts/default.vue'),
     meta: {
       breadcrumbs: [
@@ -12,21 +13,28 @@ const routes: Array<RouteRecordRaw> = [
       ]
     },
     children: [
+      { // Home
+        path: '/',
+        name: 'home',
+        component: () => import('@/views/PageHome.vue')
+      },
+      { // Share
+        path: 'share',
+        name: 'share',
+        component: () => import('@/views/PageShare.vue'),
+        meta: {
+          authen: true
+        }
+      },
       { // 404
         path: '/:pathMatch(.*)',
         name: 'not-found',
         component: () => import('@/views/PageNotFound.vue')
       },
-      {
+      { // About
         path: 'about',
         name: 'about',
-        component: () => import('@/views/PageAbout.vue'),
-        meta: {
-          breadcrumbs: [
-            { text: 'Home', to: { name: 'home' } },
-            { text: 'About', to: { name: 'about' } }
-          ]
-        }
+        component: () => import('@/views/PageAbout.vue')
       }
     ]
   }
@@ -42,12 +50,15 @@ const router = createRouter({
   }
 })
 
-router.afterEach((to, from) => {
-  const toDepth = to.path.split('/').length
-  const fromDepth = from.path.split('/').length
-  to.meta.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left'
-  document.title = to.meta.title as string || document.title
-  console.log('to.meta.transitionName', to.meta.transitionName)
+router.beforeEach((to, from, next) => {
+  const { authCheck } = useRootStore()
+  authCheck().then(auth => {
+    if ((to.meta.authen === true) && !auth.email) {
+      next({ name: 'home' })
+    } else {
+      next()
+    }
+  }).finally(() => next())
 })
 
 export default router
