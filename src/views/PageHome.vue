@@ -196,6 +196,8 @@ const message = useMessage()
 const movies = ref<movieItem[] | null>([])
 const loading = ref(true)
 
+const isSubmitting = ref(false)
+
 const fetchMovies = async () => {
   loading.value = true
   try {
@@ -214,26 +216,39 @@ const fetchMovies = async () => {
 }
 
 const hitThumb = async (mit: movieItem, actionType: LikeType) => {
+  if (isSubmitting.value) return
+  isSubmitting.value = true
   if (user.value && user.value.email) {
     let action: string = actionType.substr(0, actionType.length - 1)
     if (mit[actionType].includes(user.value.id || '')) {
       action = `${action}-undo`
     }
-    const { data } = await reactOnMovie({ movieId: mit.id, action })
-    if (movies.value) {
-      for (const m of movies.value) {
-        if (m.id === mit.id) {
-          m.likes = data.likes
-          m.dislikes = data.dislikes
-          break
+    try {
+      const { data } = await reactOnMovie({ movieId: mit.id, action })
+      if (movies.value) {
+        for (const m of movies.value) {
+          if (m.id === mit.id) {
+            m.likes = data.likes
+            m.dislikes = data.dislikes
+            break
+          }
         }
+      }
+    } catch (err: any) {
+      if (err.response) {
+        message.error((err.response.data && err.response.data.message) || err.message)
+      } else if (err.request) {
+        message.error(err.request)
+      } else {
+        message.error(err.message)
       }
     }
   }
+  isSubmitting.value = false
 }
 
 onMounted(() => {
-  console.log('onMounted')
+  // console.log('onMounted')
   fetchMovies()
 })
 </script>

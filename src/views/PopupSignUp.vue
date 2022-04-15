@@ -74,6 +74,7 @@ const formValue = ref({
   password: '',
   confirmPassword: ''
 })
+const isSubmitting = ref(false)
 const signUpFormRules = {
   ...rules,
   password: [
@@ -118,6 +119,8 @@ const onToggleShowModal = (val: boolean) => {
 
 const onSignUpClick = (e: MouseEvent) => {
   e.preventDefault()
+  if (isSubmitting.value) return
+  isSubmitting.value = true
   formSignUpRef.value?.validate(async (errors) => {
     if (!errors) {
       message.loading('Signing up...')
@@ -136,6 +139,7 @@ const onSignUpClick = (e: MouseEvent) => {
         }
       }
     }
+    isSubmitting.value = false
   })
 }
 </script>

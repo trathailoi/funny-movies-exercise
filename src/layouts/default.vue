@@ -104,6 +104,7 @@ const formValue = ref({
   email: '',
   password: ''
 })
+const isSubmitting = ref(false)
 
 // computed
 const { isDarkMode, user } = storeToRefs(useRootStore())
@@ -122,7 +123,9 @@ const showSignUpPopup = (val: boolean) => {
 const tokenKey = String(import.meta.env.VITE_TOKEN_KEY) || 'funnymovies-token'
 const doSignIn = (e: MouseEvent) => {
   e.preventDefault()
+  if (isSubmitting.value) return
   if (formRef.value) {
+    isSubmitting.value = true
     formRef.value?.validate(async (errors) => {
       if (!errors) {
         const { email, password } = formValue.value
@@ -152,6 +155,7 @@ const doSignIn = (e: MouseEvent) => {
           }
         }
       }
+      isSubmitting.value = false
     })
   }
 }
