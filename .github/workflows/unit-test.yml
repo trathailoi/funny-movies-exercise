@@ -1,4 +1,4 @@
-name: Funny Movies CI
+name: Unit Tests
 
 on:
   workflow_dispatch: {}
