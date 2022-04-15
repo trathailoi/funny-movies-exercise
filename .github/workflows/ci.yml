@@ -97,7 +97,7 @@ jobs:
 #       run: npm run test:unit -- --coverage
       run: |
         cd backend
-        npm run test:unit
+        npm run test
       # env:
       #   CI: true
 
