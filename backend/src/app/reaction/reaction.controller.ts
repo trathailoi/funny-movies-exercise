@@ -8,7 +8,6 @@ import {
 } from '@nestjs/swagger'
 import * as Joi from 'joi'
 
-import { Mapper } from '../common/mapper'
 import { JoiValidationPipe } from '../common/validation.pipe'
 import { MzSwaggerAuth } from '../common/decorator/swagger-auth.decorator'
 
@@ -20,10 +19,7 @@ import { ReactionDto } from './dto/reaction.dto'
 @MzSwaggerAuth()
 @Controller('reactions')
 export class ReactionController {
-  constructor(
-    private readonly reactionService: ReactionService,
-    private readonly mapper: Mapper
-  ) {}
+  constructor(private readonly reactionService: ReactionService) {}
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
