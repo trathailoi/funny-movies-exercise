@@ -1,8 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('dotenv').config()
-
 export class AppConfig {
   constructor(private env: { [k: string]: string | undefined }) { }
 
@@ -44,6 +41,11 @@ export class AppConfig {
   public isProduction() {
     const mode = this.getValue('MODE', false)
     return mode === 'PROD' || process.env.NODE_ENV === 'production'
+  }
+
+  public isTest() {
+    const mode = this.getValue('MODE', false)
+    return mode === 'TEST' || process.env.NODE_ENV === 'test'
   }
 
   public isDebug() {

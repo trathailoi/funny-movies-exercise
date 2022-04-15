@@ -20,6 +20,9 @@ export class FmLogger extends ConsoleLogger implements LoggerService {
       // super.log(`get rid of "verbose" and "debug" logs on production, only ${lvs} logs will be shown`)
       super.setLogLevels(lvs)
     }
+    if (appConfig.isTest()) {
+      super.setLogLevels([])
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -29,7 +29,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "pretest:e2e": "NODE_ENV=test MODE=TEST ts-node -r tsconfig-paths/register -r dotenv/config src/scripts/generate-ormconfig.ts dotenv_config_path=./.env.test",
+    "test:e2e": "docker-compose -f docker-compose.testing.yml up -d && jest --config ./test/jest-e2e.json && docker-compose -f docker-compose.testing.yml down -v"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",

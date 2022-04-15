@@ -31,6 +31,8 @@ import { HealthController } from './health/health.controller'
     LoggerModule,
     TerminusModule,
     ConfigModule.forRoot({
+      // envFilePath: ['.env.test', '.env'],
+      ignoreEnvFile: true,
       validationSchema: Joi.object({
         POSTGRES_HOST: Joi.string().required(),
         POSTGRES_PORT: Joi.number().required(),

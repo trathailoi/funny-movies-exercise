@@ -1,22 +1,74 @@
+import * as request from 'supertest'
+
 import { Test, TestingModule } from '@nestjs/testing'
 import { INestApplication } from '@nestjs/common'
-import * as request from 'supertest'
+import { getRepositoryToken } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
+
 import { AppModule } from '../src/app.module'
+import { User } from '../src/user/user.entity'
 
-describe('AppController (e2e)', () => {
+const USER_REPOSITORY_TOKEN = getRepositoryToken(User)
+const sampleUserCredentials = {
+  email: 'somebody@hotmail.com',
+  password: 'Y0uKnowWh@tItIs'
+}
+
+describe('Main user stories only (sign up --> sign in --> create movie -> like/dislike/unlike)', () => {
   let app: INestApplication
+  let httpServer: any
+  let userRepository: Repository<User>
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule]
+      imports: [AppModule],
+      providers: [
+        {
+          provide: USER_REPOSITORY_TOKEN,
+          useValue: {}
+        }
+      ]
     }).compile()
 
     app = moduleFixture.createNestApplication()
     await app.init()
+
+    httpServer = app.getHttpServer()
+    userRepository = moduleFixture.get<Repository<User>>(USER_REPOSITORY_TOKEN)
+
+    // clean up database before running tests
+    await userRepository.delete({})
   })
 
-  it('/ (GET)', () => request(app.getHttpServer())
-    .get('/')
-    .expect(200)
-    .expect('Hello World!'))
+  afterAll(async () => {
+    await app.close()
+  })
+
+  it('should be a healthy backend app #POSITIVE', async () => {
+    const response = await request(httpServer)
+      .get('/health')
+      .expect(200)
+    expect(response.status).toEqual(200)
+  })
+
+  it('should signup a new user #POSITIVE', async () => {
+    const signUpResponse = await request(httpServer)
+      .post('/authen/signup')
+      .set('Content-type', 'application/json')
+      .send({
+        ...sampleUserCredentials,
+        confirmPassword: sampleUserCredentials.password
+      })
+      .expect(201)
+    expect(signUpResponse.status).toEqual(201)
+  })
+
+  it('should sign that user in #POSITIVE', async () => {
+    const response = await request(httpServer)
+      .post('/authen/signin')
+      .set('Content-type', 'application/json')
+      .send(sampleUserCredentials)
+      .expect(200)
+    expect(response.status).toEqual(200)
+  })
 })

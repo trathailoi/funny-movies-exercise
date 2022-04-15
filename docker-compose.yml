@@ -68,7 +68,7 @@ services:
     env_file:
       - ./backend/.env # to get the following env vars: POSTGRES_USER POSTGRES_PASSWORD POSTGRES_DB
     volumes:
-      - db:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     #   - ./data/postgres:/data/postgres (?)
 
 networks:
@@ -77,4 +77,4 @@ networks:
     driver: bridge
   
 volumes:
-  db:
+  postgres-data:

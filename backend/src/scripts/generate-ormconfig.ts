@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import fs = require('fs')
 import { appConfig } from '../app.config'
 
