@@ -1,11 +1,11 @@
 import {
   Controller, Post, Get, UseGuards, Request, UsePipes, HttpCode, HttpStatus,
-  Body, BadRequestException, Res
+  Body, Res
 } from '@nestjs/common'
 import { Response } from 'express'
 import * as Joi from 'joi'
 import {
-  ApiOkResponse, ApiTags, ApiBody, ApiOperation, ApiCreatedResponse
+  ApiOkResponse, ApiTags, ApiBody, ApiOperation, ApiCreatedResponse, ApiNoContentResponse
 } from '@nestjs/swagger'
 import { joiPassword } from 'joi-password'
 
@@ -36,7 +36,17 @@ export class AuthController {
       }
     }
   })
-  @ApiCreatedResponse({})
+  @ApiCreatedResponse({
+    schema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'uuid',
+          example: 'f620a1bf-d317-4bcb-a190-0213bede890b'
+        }
+      }
+    }
+  })
   @MzPublic()
   @UsePipes(new JoiValidationPipe({
     body: Joi.object({
@@ -102,7 +112,8 @@ export class AuthController {
 
   @Get('logout')
   @ApiOperation({ summary: 'remove the jwt token from cookie' })
-  @HttpCode(HttpStatus.OK)
+  @ApiNoContentResponse()
+  @HttpCode(HttpStatus.NO_CONTENT)
   async logout(@Request() req, @Res({ passthrough: true }) response: Response) {
     response.clearCookie(appConfig.getAuthTokenKey(), {
       expires: new Date(0),
@@ -110,7 +121,7 @@ export class AuthController {
       secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
     })
     // NOTE: should I blacklist the jwt token at this point?
-    response.status(200)
+    // response.status(HttpStatus.NO_CONTENT)
   }
 
   @Get('check')

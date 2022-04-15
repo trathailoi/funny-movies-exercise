@@ -2,10 +2,10 @@ import {
   Controller,
   UsePipes, HttpCode, HttpStatus,
   Post, Get, Patch, Delete, Body, Param, Query, Req,
-  BadRequestException, NotFoundException
+  NotFoundException
 } from '@nestjs/common'
 import {
-  ApiTags, ApiCreatedResponse, ApiBadRequestResponse, ApiOkResponse, ApiNotFoundResponse, ApiNoContentResponse, ApiQuery, ApiOperation
+  ApiTags, ApiCreatedResponse, ApiBadRequestResponse, ApiOkResponse, ApiNotFoundResponse, ApiNoContentResponse, ApiQuery, ApiOperation, getSchemaPath
 } from '@nestjs/swagger'
 import * as Joi from 'joi'
 
@@ -35,7 +35,17 @@ export class MovieController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'create a new movie' })
-  @ApiCreatedResponse()
+  @ApiCreatedResponse({
+    schema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'uuid',
+          example: 'f620a1bf-d317-4bcb-a190-0213bede890b'
+        }
+      }
+    }
+  })
   @ApiBadRequestResponse()
   @UsePipes(new JoiValidationPipe({
     body: Joi.object().keys({
@@ -54,7 +64,22 @@ export class MovieController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'get movies with reactions' })
-  @ApiOkResponse({ type: MovieDto, isArray: true })
+  // @ApiOkResponse({ type: MovieDto, isArray: true })
+  @ApiOkResponse({
+    schema: {
+      type: 'object',
+      properties: {
+        data: {
+          type: 'array',
+          items: {
+            allOf: [
+              { $ref: getSchemaPath(MovieDto) }
+            ]
+          }
+        }
+      }
+    }
+  })
   @UsePipes(new JoiValidationPipe({
     query: Joi.object({
       pageSize: Joi.number().integer().min(1).max(50)

@@ -1,24 +1,29 @@
 import {
   BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique, UpdateDateColumn, OneToMany
 } from 'typeorm'
+import { ApiProperty } from '@nestjs/swagger'
 import { Exclude, Expose } from 'class-transformer'
 
 import type { Movie } from '../app/movie/movie.entity'
 
 @Entity()
 export class User extends BaseEntity {
+  @ApiProperty({ format: 'uuid', example: 'f620a1bf-d317-4bcb-a190-0213bede890b' })
   @PrimaryGeneratedColumn('uuid')
     id!: string
 
+  @ApiProperty({ format: 'email', example: 'somebody@hotmail.com' })
   @Unique(['email'])
   @Column()
     email: string
 
+  @ApiProperty({ format: 'string', example: 'Tom' })
   @Column({
     nullable: true
   })
     firstName?: string
 
+  @ApiProperty({ format: 'string', example: 'Cruise' })
   @Column({
     nullable: true
   })

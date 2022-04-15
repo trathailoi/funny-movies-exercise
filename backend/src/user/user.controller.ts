@@ -1,16 +1,14 @@
 import {
-  Controller, Post, Get, Body, Query, HttpCode, HttpStatus, UsePipes, BadRequestException
+  Controller, Post, Get, Body, Query, HttpCode, HttpStatus, UsePipes
 } from '@nestjs/common'
 import {
-  ApiTags, ApiBody, ApiCreatedResponse, ApiOperation, ApiOkResponse, ApiQuery
+  ApiTags, ApiBody, ApiCreatedResponse, ApiOperation, ApiQuery
 } from '@nestjs/swagger'
 import * as Joi from 'joi'
 import { joiPassword } from 'joi-password'
 
-// import { MzPublic } from '../app/common/decorator/public.decorator'
 import { JoiValidationPipe } from '../app/common/validation.pipe'
 import { CreateUserDto } from './dto/create-user.dto'
-import { User } from './user.entity'
 import { UserService } from './user.service'
 
 @ApiTags('users')
@@ -34,7 +32,17 @@ export class UserController {
       }
     }
   })
-  @ApiCreatedResponse({})
+  @ApiCreatedResponse({
+    schema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'uuid',
+          example: 'f620a1bf-d317-4bcb-a190-0213bede890b'
+        }
+      }
+    }
+  })
   // @ApiExcludeEndpoint()
   @UsePipes(new JoiValidationPipe({
     body: Joi.object({
@@ -60,7 +68,7 @@ export class UserController {
 
   @Get()
   @ApiOperation({ summary: 'get users (for development purpose)' })
-  // @ApiOkResponse({ type: User, isArray: true })
+  // @ApiOkResponse({ type: User, tru
   @UsePipes(new JoiValidationPipe({
     query: Joi.object({
       pageSize: Joi.number().integer().min(1).max(50)
