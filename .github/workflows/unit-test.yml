@@ -1,4 +1,4 @@
-name: Funny Movies CI
+name: Unit Tests
 
 on:
   workflow_dispatch: {}
@@ -20,8 +20,8 @@ jobs:
   frontend:
     # needs: [detect_changes]
     # if: needs.detect_changes.outputs.frontend_has_been_changed == 'true'
-#     runs-on: ubuntu-latest
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
+    # runs-on: [self-hosted]
 
     steps:
     - uses: actions/checkout@v2
@@ -61,8 +61,8 @@ jobs:
   backend:
     # needs: [detect_changes]
     # if: needs.detect_changes.outputs.backend_has_been_changed == 'true'
-#     runs-on: ubuntu-latest
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
+    # runs-on: [self-hosted]
 
     steps:
     - uses: actions/checkout@v2
@@ -97,7 +97,8 @@ jobs:
 #       run: npm run test:unit -- --coverage
       run: |
         cd backend
-        npm run test:unit
+        cp .env.test .env
+        npm run test
       # env:
       #   CI: true
 
