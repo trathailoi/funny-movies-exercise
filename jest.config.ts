@@ -22,6 +22,7 @@ module.exports = {
   },
 
   transformIgnorePatterns: ['<rootDir>/node_modules'],
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/backend'],
   setupFilesAfterEnv: ['<rootDir>/.jest/setup.ts'],
   snapshotSerializers: ['jest-serializer-vue'],
   moduleFileExtensions: [
