@@ -42,6 +42,7 @@
     "@nestjs/passport": "^8.0.1",
     "@nestjs/swagger": "^5.1.5",
     "@nestjs/terminus": "^8.0.4",
+    "@nestjs/throttler": "^2.0.1",
     "@nestjs/typeorm": "^8.0.2",
     "automapper-ts": "^1.9.0",
     "bcrypt": "^5.0.1",

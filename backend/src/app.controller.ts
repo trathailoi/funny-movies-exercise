@@ -1,12 +1,10 @@
-import {
-  Controller, Get
-} from '@nestjs/common'
-import {
-  ApiOperation
-} from '@nestjs/swagger'
+import { Controller, Get } from '@nestjs/common'
+import { ApiOperation } from '@nestjs/swagger'
+import { SkipThrottle } from '@nestjs/throttler'
 import { AppService } from './app.service'
 import { MzSwaggerAuth } from './app/common/decorator/swagger-auth.decorator'
 
+@SkipThrottle()
 @MzSwaggerAuth()
 @Controller()
 export class AppController {

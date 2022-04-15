@@ -7,9 +7,11 @@ import {
   HealthCheck
 } from '@nestjs/terminus'
 import { ApiExcludeEndpoint } from '@nestjs/swagger'
+import { SkipThrottle } from '@nestjs/throttler'
 
 import { MzPublic } from '../app/common/decorator/public.decorator'
 
+@SkipThrottle()
 @Controller('health')
 export class HealthController {
   constructor(
