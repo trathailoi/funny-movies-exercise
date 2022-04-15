@@ -55,12 +55,8 @@ export class AuthController {
   }))
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() signupData: { email: string, password: string, confirmPassword: string }) {
-    try {
-      const result = await this.authService.signup(signupData)
-      return result.identifiers[0]
-    } catch (error) {
-      throw new BadRequestException(error)
-    }
+    const result = await this.authService.signup(signupData)
+    return result.identifiers[0]
   }
 
   @Post('signin')

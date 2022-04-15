@@ -6,8 +6,9 @@ import {
 import { ConfigModule } from '@nestjs/config'
 import * as Joi from 'joi'
 import { TerminusModule } from '@nestjs/terminus'
-import { APP_GUARD } from '@nestjs/core'
+import { APP_GUARD, APP_FILTER } from '@nestjs/core'
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'
+import { AllExceptionFilter } from './filters/exception.filter'
 
 import { appConfig } from './app.config'
 
@@ -74,6 +75,10 @@ import { ReactionModule } from './app/reaction/reaction.module'
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard
+    },
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionFilter
     }
   ]
 })

@@ -54,12 +54,8 @@ export class UserController {
   }))
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createUserDto: CreateUserDto) {
-    try {
-      const result = await this.userService.create(createUserDto)
-      return result.identifiers[0]
-    } catch (error) {
-      throw new BadRequestException(error)
-    }
+    const result = await this.userService.create(createUserDto)
+    return result.identifiers[0]
   }
 
   @Get()
