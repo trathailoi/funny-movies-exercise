@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { ReactionType } from '../reaction.entity'
 
 export class ReactionDto {
   @ApiProperty({ example: '' })
@@ -7,7 +8,7 @@ export class ReactionDto {
   @ApiProperty({ example: '' })
     user: string
 
-  @ApiProperty({ example: 'like' })
+  @ApiProperty({ example: ReactionType.like })
     action: string
 
   @ApiProperty({ example: '' })

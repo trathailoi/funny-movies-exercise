@@ -18,7 +18,7 @@ import { Movie } from './movie.entity'
 import { MovieService } from './movie.service'
 import { MovieDto } from './dto/movie.dto'
 
-import { Reaction } from '../reaction/reaction.entity'
+import { Reaction, ReactionType } from '../reaction/reaction.entity'
 import { ReactionService } from '../reaction/reaction.service'
 // import { ReactionDto } from '../reaction/dto/reaction.dto'
 
@@ -98,8 +98,8 @@ export class MovieController {
           id: m.author.id,
           email: m.author.email
         } : {},
-        likes: m.reactions.filter((r) => r.action === 'like').map((r) => r.user.id),
-        dislikes: m.reactions.filter((r) => r.action === 'dislike').map((r) => r.user.id)
+        likes: m.reactions.filter((r) => r.action === ReactionType.like).map((r) => r.user.id),
+        dislikes: m.reactions.filter((r) => r.action === ReactionType.dislike).map((r) => r.user.id)
       })),
       count
     }
@@ -202,13 +202,13 @@ export class MovieController {
     return {
       message: 'success',
       likes: result.reduce((ls: string[], r: Reaction) => {
-        if (r.action === 'like') {
+        if (r.action === ReactionType.like) {
           ls.push(r.user.id)
         }
         return ls
       }, []),
       dislikes: result.reduce((dls: string[], r: Reaction) => {
-        if (r.action === 'dislike') {
+        if (r.action === ReactionType.dislike) {
           dls.push(r.user.id)
         }
         return dls

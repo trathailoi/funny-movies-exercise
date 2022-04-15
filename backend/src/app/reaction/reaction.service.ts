@@ -5,7 +5,7 @@ import { Repository } from 'typeorm'
 import { BaseService } from '../common/base.service'
 import { Mapper } from '../common/mapper'
 import { ReactionDto } from './dto/reaction.dto'
-import { Reaction } from './reaction.entity'
+import { Reaction, ReactionType } from './reaction.entity'
 
 @Injectable()
 export class ReactionService extends BaseService<Reaction> {
@@ -28,7 +28,7 @@ export class ReactionService extends BaseService<Reaction> {
     if (this.allowTypes.includes(entity.action)) {
       if (currentOne) {
         if (entity.action === currentOne.action) return
-        currentOne.action = entity.action
+        currentOne.action = <ReactionType>entity.action
         await this.repo.save(currentOne)
       } else {
         await this.repo.save(this.mapper.map(ReactionDto, Reaction, entity))
