@@ -3,7 +3,8 @@ FROM node:17 AS development
 WORKDIR /usr/src/app
 COPY package*.json ./
 # RUN npm install glob rimraf
-RUN npm install --only=development
+# RUN npm install --only=development
+RUN npm install
 # should mount the project to /usr/src/app
 
 ARG PORT=80
