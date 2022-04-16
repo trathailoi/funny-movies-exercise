@@ -34,7 +34,7 @@ services:
       - ./backend/.env
     environment:
       - MODE=DEV
-      - CLIENT_URL=http://funny-movies-dev.loitra.xyz
+      - CLIENT_URL=https://funny-movies-dev.loitra.xyz
       - POSTGRES_HOST=funnymovies-db
     volumes:
       - ./backend:/usr/src/app
