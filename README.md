@@ -1,14 +1,57 @@
-# Vue 3 + Typescript + Vite
+# Funny Movies
 
-This template should help get you started developing with Vue 3 and Typescript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Getting started
 
-## Recommended IDE Setup
+### Prerequisites
+  - [NodeJs](https://nodejs.org) (>= 16) (Mine is v17.8.0)
+  - [Docker](https://www.docker.com) ([Docker Desktop](https://www.docker.com/products/docker-desktop) recommended)
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+### Recommended IDE Setup
 
-## Type Support For `.vue` Imports in TS
+- [VSCode](https://code.visualstudio.com/)
+- [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+- ... and other recommended extensions listed in [`<rootDir>/.vscode/extensions.json`](.vscode/extensions.json)
+- Open the directory [`<rootDir>/backend`](backend) in a separate VSCode window to take advantage of ESLint config.
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's `.vue` type support plugin by running `Volar: Switch TS Plugin on/off` from VSCode command palette.
+## Tasks and commands
+**Note:** As I'm on Mac, those commands below may not work expectedly on Windows.
+### Frontend
+- Installation & run
+  1. (optional) `cp .env.development .env.development.local`
+  2. `npm i`
+  3. `npm run dev`
+- Unit test: (*Not fully implemented yet*)
+  ```bash
+  npm run test:jest
+  ```
+- End-to-end test: *Not implemented yet, probably be using [Cypress](https://www.cypress.io/)*
+
+### Backend
+- Installation & run
+  1. `cp .env.example .env`
+  2. `npm i`
+  3. start Docker on your machine
+  4. `npm run start:dev`
+  5. (optional) Seeding data: `npm run db:seed`.
+     - You can also seed data for the project live verion by running `npm run db:seed -- --env-var BASE_URL=https://funny-movies-dev.loitra.xyz/api/v1.0`.
+
+**Note**: You can play around with the API endpoints via the swagger documentation at http://localhost:3000/api on your local machine, or https://funny-movies-dev.loitra.xyz/api/
+
+- Unit test:
+  ```bash
+  npm run test
+  ```
+  - this will be automatically run on Github Action on every git push or PR on branch `develop`. You can find the workflow at [https://github.com/trathailoi/funny-movies-exercise/actions/workflows/unit-test.yml](https://github.com/trathailoi/funny-movies-exercise/actions/workflows/unit-test.yml)
+  - with coverage
+  ```bash
+  npm run test:cov
+  ```
+  find the coverage at [<rootDir>/backend/coverage/lcov-report/index.html](backend/coverage/lcov-report/index.html)
+- Integration test:
+  ```bash
+  npm run test:e2e
+  ```
+  this command will spin up a new database dedicated for testing and will be completely terminated after finishing the tests.
 
 ## Commit message convention
 

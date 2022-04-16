@@ -2,10 +2,10 @@ import {
   Controller,
   UsePipes, HttpCode, HttpStatus,
   Post, Get, Patch, Delete, Body, Param, Query, Req,
-  BadRequestException, NotFoundException
+  NotFoundException
 } from '@nestjs/common'
 import {
-  ApiTags, ApiCreatedResponse, ApiBadRequestResponse, ApiOkResponse, ApiNotFoundResponse, ApiNoContentResponse, ApiQuery, ApiOperation
+  ApiTags, ApiCreatedResponse, ApiBadRequestResponse, ApiOkResponse, ApiNotFoundResponse, ApiNoContentResponse, ApiQuery, ApiOperation, getSchemaPath
 } from '@nestjs/swagger'
 import * as Joi from 'joi'
 
@@ -35,7 +35,17 @@ export class MovieController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'create a new movie' })
-  @ApiCreatedResponse()
+  @ApiCreatedResponse({
+    schema: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'uuid',
+          example: 'f620a1bf-d317-4bcb-a190-0213bede890b'
+        }
+      }
+    }
+  })
   @ApiBadRequestResponse()
   @UsePipes(new JoiValidationPipe({
     body: Joi.object().keys({
@@ -47,18 +57,29 @@ export class MovieController {
     })
   }))
   async create(@Body() movieDto: MovieDto, @Req() req) {
-    try {
-      const result = await this.movieService.create({ ...movieDto, ...(movieDto.author ? {} : { author: req.user.id }) }, req.user)
-      return result.identifiers[0]
-    } catch (error) {
-      throw new BadRequestException(error)
-    }
+    const result = await this.movieService.create({ ...movieDto, ...(movieDto.author ? {} : { author: req.user.id }) }, req.user)
+    return result.identifiers[0]
   }
 
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'get movies with reactions' })
-  @ApiOkResponse({ type: MovieDto, isArray: true })
+  // @ApiOkResponse({ type: MovieDto, isArray: true })
+  @ApiOkResponse({
+    schema: {
+      type: 'object',
+      properties: {
+        data: {
+          type: 'array',
+          items: {
+            allOf: [
+              { $ref: getSchemaPath(MovieDto) }
+            ]
+          }
+        }
+      }
+    }
+  })
   @UsePipes(new JoiValidationPipe({
     query: Joi.object({
       pageSize: Joi.number().integer().min(1).max(50)
@@ -74,7 +95,6 @@ export class MovieController {
   })
   @MzPublic()
   async findAll(@Query('pageSize') pageSize: number, @Query('currentPage') currentPage: number) {
-    // try {
     const { data, count } = await this.movieService.findAll({
       pagination: {
         pageSize,
@@ -103,9 +123,6 @@ export class MovieController {
       })),
       count
     }
-    // } catch (error) {
-    //   throw new BadRequestException(error)
-    // }
   }
 
   @Get(':id')
@@ -120,12 +137,7 @@ export class MovieController {
     })
   }))
   async findOne(@Param('id') id: string) {
-    let result
-    try {
-      result = await this.movieService.findOne(id)
-    } catch (error) {
-      throw new BadRequestException(error)
-    }
+    const result = await this.movieService.findOne(id)
     if (!result) {
       throw new NotFoundException()
     }
@@ -169,15 +181,11 @@ export class MovieController {
     })
   }))
   async delete(@Param('id') id: string) {
-    try {
-      const result = await this.movieService.delete(id)
-      if (!result.affected) {
-        return new NotFoundException()
-      }
-      return result
-    } catch (error) {
-      return new BadRequestException(error)
+    const result = await this.movieService.delete(id)
+    if (!result.affected) {
+      return new NotFoundException()
     }
+    return result
   }
 
   @Patch(':id/reactions')
@@ -195,8 +203,6 @@ export class MovieController {
     })
   }))
   async reactMovie(@Param('id') id: string, @Query('action') action: string, @Req() req) {
-    // TODO: need to implement ExceptionFilter at global scope for such cases
-    // try {
     await this.reactionService.react({ movie: id, action, user: req.user.id })
     const result = await this.reactionService.getReactions(id)
     return {
@@ -214,8 +220,5 @@ export class MovieController {
         return dls
       }, [])
     }
-    // } catch (error) {
-    //   throw new BadRequestException(error)
-    // }
   }
 }
