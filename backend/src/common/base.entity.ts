@@ -1,7 +1,7 @@
 import {
   PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn, BaseEntity as SuperBaseEntity, ManyToOne
 } from 'typeorm'
-import { User } from '../../user/user.entity'
+import { User } from '../user/user.entity'
 
 export abstract class BaseEntity<T> extends SuperBaseEntity {
   @PrimaryGeneratedColumn('uuid')

@@ -14,7 +14,7 @@ import { appConfig } from '../app.config'
 import { AuthService } from './auth.service'
 import { LocalAuthGuard } from './local-auth.guard'
 import { MzPublic } from '../decorators/public.decorator'
-import { JoiValidationPipe } from '../app/common/validation.pipe'
+import { JoiValidationPipe } from '../common/validation.pipe'
 
 @ApiTags('authen')
 @Controller('authen')

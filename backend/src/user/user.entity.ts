@@ -1,10 +1,8 @@
 import {
-  BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique, UpdateDateColumn, OneToMany
+  BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Unique, UpdateDateColumn
 } from 'typeorm'
 import { ApiProperty } from '@nestjs/swagger'
 import { Exclude, Expose } from 'class-transformer'
-
-import type { Movie } from '../app/movie/movie.entity'
 
 @Entity()
 export class User extends BaseEntity {
@@ -53,14 +51,6 @@ export class User extends BaseEntity {
   })
     modifiedAt?: Date
 
-  @OneToMany('Movie', 'user', {
-    cascade: true,
-    // // nullable: true,
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-  })
-    movies?: Movie[]
-
   // @CreateDateColumn({
   //   default: 'now()',
   //   update: false,
@@ -74,7 +64,7 @@ export class User extends BaseEntity {
   // })
   //   updatedAt: string
 
-  constructor(partial: Partial<User>) {
+  constructor(partial?: Partial<User>) {
     super()
     Object.assign(this, partial)
   }

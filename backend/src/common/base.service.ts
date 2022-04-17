@@ -3,8 +3,8 @@ import {
   DeleteResult, Repository
 } from 'typeorm'
 import type { EntityId } from 'typeorm/repository/EntityId'
-import { FmLogger } from '../../logger/logger.service'
-// import { User } from '../../user/user.entity'
+import { FmLogger } from '../logger/logger.service'
+// import { User } from '../user/user.entity'
 
 export class BaseService<T> {
   protected readonly logger = new FmLogger(this.constructor.name)

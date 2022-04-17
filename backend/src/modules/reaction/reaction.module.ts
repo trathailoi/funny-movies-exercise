@@ -5,7 +5,7 @@ import { ReactionService } from './reaction.service'
 import { ReactionController } from './reaction.controller'
 import { Reaction } from './reaction.entity'
 
-import { Mapper } from '../common/mapper'
+import { Mapper } from '../../common/mapper'
 
 @Module({
   imports: [TypeOrmModule.forFeature([Reaction])],

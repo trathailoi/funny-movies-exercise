@@ -5,7 +5,7 @@ import {
 import type { Reaction } from '../reaction/reaction.entity'
 import type { User } from '../../user/user.entity'
 
-import { BaseEntity } from '../common/base.entity'
+import { BaseEntity } from '../../common/base.entity'
 
 @Entity()
 export class Movie extends BaseEntity<Movie> {

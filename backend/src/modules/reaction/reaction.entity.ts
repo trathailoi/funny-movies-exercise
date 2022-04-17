@@ -5,7 +5,7 @@ import { ApiProperty } from '@nestjs/swagger'
 
 import type { Movie } from '../movie/movie.entity'
 
-import { BaseEntity } from '../common/base.entity'
+import { BaseEntity } from '../../common/base.entity'
 import { User } from '../../user/user.entity'
 
 export enum ReactionType {

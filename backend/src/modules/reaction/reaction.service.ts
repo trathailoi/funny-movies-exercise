@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
-import { BaseService } from '../common/base.service'
-import { Mapper } from '../common/mapper'
+import { BaseService } from '../../common/base.service'
+import { Mapper } from '../../common/mapper'
 import { ReactionDto } from './dto/reaction.dto'
 import { Reaction, ReactionType } from './reaction.entity'
 

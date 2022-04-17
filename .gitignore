@@ -6,3 +6,9 @@ dist-ssr
 .eslintcache
 components.d.ts
 coverage
+
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride

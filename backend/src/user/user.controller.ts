@@ -7,7 +7,7 @@ import {
 import * as Joi from 'joi'
 import { joiPassword } from 'joi-password'
 
-import { JoiValidationPipe } from '../app/common/validation.pipe'
+import { JoiValidationPipe } from '../common/validation.pipe'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UserService } from './user.service'
 

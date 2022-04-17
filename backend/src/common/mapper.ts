@@ -1,14 +1,14 @@
 import 'automapper-ts'
 import { Injectable } from '@nestjs/common'
 
-import { User } from '../../user/user.entity'
-import { CreateUserDto } from '../../user/dto/create-user.dto'
+import { User } from '../user/user.entity'
+import { CreateUserDto } from '../user/dto/create-user.dto'
 
-import { Reaction } from '../reaction/reaction.entity'
-import { ReactionDto } from '../reaction/dto/reaction.dto'
+import { Reaction } from '../modules/reaction/reaction.entity'
+import { ReactionDto } from '../modules/reaction/dto/reaction.dto'
 
-import { Movie } from '../movie/movie.entity'
-import { MovieDto } from '../movie/dto/movie.dto'
+import { Movie } from '../modules/movie/movie.entity'
+import { MovieDto } from '../modules/movie/dto/movie.dto'
 
 /**
  * Wrapper around automapper, for dependency injection convenience (static/global variables bad)

@@ -6,7 +6,7 @@ import { MovieService } from './movie.service'
 import { MovieController } from './movie.controller'
 import { Movie } from './movie.entity'
 
-import { Mapper } from '../common/mapper'
+import { Mapper } from '../../common/mapper'
 
 @Module({
   imports: [

@@ -4,7 +4,7 @@ import { Repository } from 'typeorm'
 import { Reaction } from './reaction.entity'
 import { ReactionDto } from './dto/reaction.dto'
 import { ReactionService } from './reaction.service'
-import { Mapper } from '../common/mapper'
+import { Mapper } from '../../common/mapper'
 
 const REACTION_REPOSITORY_TOKE = getRepositoryToken(Reaction)
 
@@ -21,7 +21,7 @@ describe('ReactionService', () => {
         {
           provide: REACTION_REPOSITORY_TOKE,
           useValue: {
-            // from src/app/common/base.service.ts
+            // from src/common/base.service.ts
             create: jest.fn(),
             update: jest.fn(),
             findAll: jest.fn(),

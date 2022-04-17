@@ -5,7 +5,7 @@ import { MovieController } from './movie.controller'
 import { MovieService } from './movie.service'
 import { ReactionService } from '../reaction/reaction.service'
 import { Reaction, ReactionType } from '../reaction/reaction.entity'
-import { Mapper } from '../common/mapper'
+import { Mapper } from '../../common/mapper'
 
 describe('MovieController', () => {
   let movieController: MovieController
@@ -21,7 +21,7 @@ describe('MovieController', () => {
         {
           provide: MovieService,
           useValue: {
-            // from src/app/common/base.service.ts
+            // from src/common/base.service.ts
             create: jest.fn(),
             update: jest.fn(),
             findAll: jest.fn(),
@@ -33,7 +33,7 @@ describe('MovieController', () => {
         {
           provide: ReactionService,
           useValue: {
-            // from src/app/common/base.service.ts
+            // from src/common/base.service.ts
             create: jest.fn(),
             update: jest.fn(),
             findAll: jest.fn(),

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { Mapper } from '../common/mapper'
+import { Mapper } from '../../common/mapper'
 
 import { Movie } from './movie.entity'
 import { MovieService } from './movie.service'

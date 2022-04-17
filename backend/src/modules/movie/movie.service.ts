@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository, InsertResult, UpdateResult } from 'typeorm'
 import type { EntityId } from 'typeorm/repository/EntityId'
 
-import { Mapper } from '../common/mapper'
-import { BaseService } from '../common/base.service'
+import { Mapper } from '../../common/mapper'
+import { BaseService } from '../../common/base.service'
 import { Movie } from './movie.entity'
 import { MovieDto } from './dto/movie.dto'
 

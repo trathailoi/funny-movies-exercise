@@ -1,7 +1,6 @@
-import { Injectable, BadRequestException } from '@nestjs/common'
+import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { compareSync } from 'bcryptjs'
-import { classToPlain } from 'class-transformer'
+import { comparePwd } from '../common/utils'
 
 import { UserService } from '../user/user.service'
 
@@ -14,16 +13,18 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<any> {
-    const user = await this.userService.findOne(email)
-    if (user) {
-      // const isMatch = await bcryptjs.compare(pass, user.password)
-      const isMatch = compareSync(pass, user.password)
-      if (isMatch) {
-        return classToPlain(user)
-      }
+  async validateUser(email: string, pass: string) {
+    const user = await this.userService.findByEmail(email)
+    if (!user) {
+      throw new UnauthorizedException('Username or password is incorrect')
     }
-    return null
+    const compareResult = comparePwd(pass, user.password)
+
+    if (!compareResult) {
+      throw new UnauthorizedException('Username or password is incorrect')
+    }
+
+    return user
   }
 
   async signup(entity) { // : Promise<InsertResult>

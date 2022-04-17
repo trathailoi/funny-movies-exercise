@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger'
 import * as Joi from 'joi'
 
-import { JoiValidationPipe } from '../common/validation.pipe'
+import { JoiValidationPipe } from '../../common/validation.pipe'
 import { MzSwaggerAuth } from '../../decorators/swagger.decorator'
 
 // import { Reaction } from './reaction.entity'

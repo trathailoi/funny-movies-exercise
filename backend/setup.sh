@@ -34,6 +34,12 @@ if [ $? -ne 0 ]; then
     err "⛔️ Error while spinning up the database."
 fi
 
+# log "🌱 Starting seeding data.."
+# npm run typeorm:seed
+# if [ $? -ne 0 ]; then
+#     err "⛔️ Error while seeding data."
+# fi
+
 # log "👐 Create schemas: npm run schema:sync"
 # docker exec -it app_server npm run schema:sync
 # if [ $? -ne 0 ]; then

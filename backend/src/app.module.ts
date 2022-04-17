@@ -24,8 +24,8 @@ import LogsMiddleware from './logger/logger.middleware'
 import { UserModule } from './user/user.module'
 import { AuthModule } from './auth/auth.module'
 import { JwtAuthGuard } from './auth/jwt-auth.guard'
-import { MovieModule } from './app/movie/movie.module'
-import { ReactionModule } from './app/reaction/reaction.module'
+import { MovieModule } from './modules/movie/movie.module'
+import { ReactionModule } from './modules/reaction/reaction.module'
 
 @Module({
   imports: [
