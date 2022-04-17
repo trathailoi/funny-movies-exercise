@@ -25,14 +25,21 @@
   npm run test:jest
   ```
 - End-to-end test: *Not implemented yet, probably be using [Cypress](https://www.cypress.io/)*
+- You can do the following steps to test production mode locally with virtual host:
+  1. please add this line `127.0.0.1 funnymovies.loi-tra` to your `/etc/hosts` file
+  2. run `npm run dev:docker`
+     - This command will also spin up a backend container and a database container as well.
+  3. open [http://funnymovies.loi-tra](http://funnymovies.loi-tra) on browser to see the production version locally.
 
-### Backend
+### Backend (at the directory [`<rootDir>/backend`](backend))
+- `cd <rootDir>/backend`
 - Installation & run
   1. `cp .env.example .env`
   2. `npm i`
   3. start Docker on your machine
-  4. `npm run start:dev`
-  5. (optional) Seeding data: `npm run db:seed`.
+  4. `./setup.sh`
+  5. `npm run start:dev`
+  6. (optional) Seeding data: `npm run db:seed`.
      - You can also seed data for the project live verion by running `npm run db:seed -- --env-var BASE_URL=https://funny-movies-dev.loitra.xyz/api/v1.0`.
 
 **Note**: You can play around with the API endpoints via the swagger documentation at http://localhost:3000/api on your local machine, or https://funny-movies-dev.loitra.xyz/api/

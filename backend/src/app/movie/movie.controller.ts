@@ -11,8 +11,8 @@ import * as Joi from 'joi'
 
 // import { Mapper } from '../common/mapper'
 import { JoiValidationPipe } from '../common/validation.pipe'
-import { MzSwaggerAuth } from '../common/decorator/swagger-auth.decorator'
-import { MzPublic } from '../common/decorator/public.decorator'
+import { MzSwaggerAuth } from '../../decorators/swagger.decorator'
+import { MzPublic } from '../../decorators/public.decorator'
 
 import { Movie } from './movie.entity'
 import { MovieService } from './movie.service'

@@ -1,11 +1,16 @@
-FROM node:17 AS development
-# RUN apk add curl
+FROM node:17-alpine AS development
+RUN apk add dumb-init curl
 WORKDIR /usr/src/app
+
 COPY package*.json ./
-# RUN npm install glob rimraf
-# RUN npm install --only=development
+COPY ./src ./src
+COPY ./nest-cli.json ./
+COPY ./tsconfig.build.json ./
+COPY ./tsconfig.json ./
+
 RUN npm install
-# should mount the project to /usr/src/app
+RUN npm install @nestjs/platform-express
+# RUN npm install -g @nestjs/cli
 
 ARG PORT=80
 ENV PORT=${PORT}
@@ -13,38 +18,47 @@ ENV PORT=${PORT}
 ARG API_VERSION=80
 ENV API_VERSION=${API_VERSION}
 
+CMD [ "dumb-init", "npm", "run", "start:dev"]
+
 EXPOSE ${PORT}
 HEALTHCHECK --interval=5s --timeout=5s CMD curl -f http://127.0.0.1:${PORT}/api/v${API_VERSION}/health || exit 1
 
-# #------------------------------------------------------------------------------
 
-# FROM node:17-alpine As build
-# WORKDIR /usr/src/app
-# COPY package*.json ./
-# RUN npm install --only=development
-# COPY . .
-# RUN npm run build
+# ----------------- BUILD -----------------
+FROM node:17-alpine As build
 
-# #------------------------------------------------------------------------------
-# FROM node:17-alpine As production
-# RUN apk add dumb-init curl
-# ARG NODE_ENV=production
-# ENV NODE_ENV=${NODE_ENV}
+WORKDIR /usr/src/app
 
-# USER node
-# WORKDIR /usr/src/app
-# COPY package*.json ./
-# # RUN npm install --only=production
-# RUN npm ci --only=production
-# COPY --chown=node:node . .
-# COPY --chown=node:node --from=build /usr/src/app/dist ./dist
-# CMD ["dumb-init", "node", "dist/main"]
+COPY --from=development /usr/src/app/ ./
 
-# ARG PORT=80
-# ENV PORT=${PORT}
+RUN npm run build
 
-# ARG API_VERSION=80
-# ENV API_VERSION=${API_VERSION}
 
-# EXPOSE ${PORT}
-# HEALTHCHECK --interval=5s --timeout=5s CMD curl -f http://127.0.0.1:${PORT}/api/v${API_VERSION}/health || exit 1
+# ----------------- PRODUCTION -----------------
+FROM node:17-alpine As production
+RUN apk add dumb-init curl
+
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+ARG PORT=80
+ENV PORT=${PORT}
+
+ARG API_VERSION=80
+ENV API_VERSION=${API_VERSION}
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install --only=production
+
+COPY . .
+
+COPY --from=build /usr/src/app/dist ./dist
+COPY --from=build /usr/src/app/.env.production ./.env
+
+CMD [ "dumb-init", "node", "dist/main"]
+
+EXPOSE ${PORT}
+HEALTHCHECK --interval=5s --timeout=5s CMD curl -f http://127.0.0.1:${PORT}/api/v${API_VERSION}/health || exit 1

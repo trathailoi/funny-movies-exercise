@@ -1,5 +1,5 @@
 import type { Logger as TypeOrmLogger, QueryRunner } from 'typeorm'
-import { FmLogger } from '../logger/logger.service'
+import { FmLogger } from './logger.service'
 import { appConfig } from '../app.config'
 
 const healthCheckQueryString = 'SELECT 1'

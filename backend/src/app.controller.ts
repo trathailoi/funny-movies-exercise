@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common'
 import { ApiOperation, ApiOkResponse } from '@nestjs/swagger'
 import { SkipThrottle } from '@nestjs/throttler'
 import { AppService } from './app.service'
-import { MzSwaggerAuth } from './app/common/decorator/swagger-auth.decorator'
+import { MzSwaggerAuth } from './decorators/swagger.decorator'
 
 @SkipThrottle()
 @MzSwaggerAuth()

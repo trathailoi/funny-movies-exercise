@@ -8,14 +8,14 @@ services:
       target: development
     image: funnymovies-backend
     restart: on-failure
-    command: npm run start -- --watch
     ports:
       - "${PORT}:${PORT}"
     env_file:
       - ./.env
     environment:
       - MODE=DEV
-      - CLIENT_URL=http://localhost:8080
+      # - CLIENT_URL=http://localhost:8080
+      - CLIENT_URL=http://funnymovies.loi-tra
       - POSTGRES_HOST=funnymovies-db
     volumes:
       - .:/usr/src/app
@@ -39,7 +39,7 @@ services:
 
 networks:
   default:
-    # name: funnymovies-local-net
+    name: funnymovies-local-net
     driver: bridge
 
 volumes:

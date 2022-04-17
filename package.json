@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --port 8080",
+    "backend:docker": "cd backend && docker-compose up -d",
+    "dev:docker": "npm run backend:docker && docker-compose up -d",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "test:vitest": "vitest",

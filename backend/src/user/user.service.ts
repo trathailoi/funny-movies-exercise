@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { InsertResult, Repository } from 'typeorm'
-import * as bcrypt from 'bcrypt'
+import { genSaltSync, hashSync } from 'bcryptjs'
 
 import { BaseService } from '../app/common/base.service'
 import { User } from './user.entity'
@@ -19,8 +19,10 @@ export class UserService extends BaseService<User> {
 
   async create(entity: CreateUserDto): Promise<InsertResult> {
     const tmpUser: User = new User(entity)
-    const salt = await bcrypt.genSalt()
-    const hash = await bcrypt.hash(entity.password, salt)
+    // const salt = await bcryptjs.genSalt()
+    const salt = genSaltSync()
+    // const hash = await bcryptjs.hash(entity.password, salt)
+    const hash = hashSync(entity.password, salt)
     tmpUser.password = hash
     return this.repo.insert(tmpUser)
   }

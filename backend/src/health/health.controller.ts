@@ -9,7 +9,7 @@ import {
 import { ApiExcludeEndpoint } from '@nestjs/swagger'
 import { SkipThrottle } from '@nestjs/throttler'
 
-import { MzPublic } from '../app/common/decorator/public.decorator'
+import { MzPublic } from '../decorators/public.decorator'
 
 @SkipThrottle()
 @Controller('health')

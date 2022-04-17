@@ -3,6 +3,11 @@ version: '3.3'
 services:
 
   funnymovies-frontend:
+    # build:
+    #   context: .
+    #   args:
+    #     - VITE_BASE_API=http://funnymovies.loi-tra
+    # image: funnymovies-frontend
     image: nginx:stable-alpine
     container_name: funnymovies-frontend
     volumes:
@@ -14,7 +19,7 @@ services:
       - LETSENCRYPT_EMAIL=trathailoi@gmail.com
       - API_URL=http://funnymovies-backend
       - API_HOST=funnymovies-backend
-    command: nginx -g 'daemon off;'
+    # command: nginx -g 'daemon off;'
     healthcheck:
       test: ["CMD-SHELL", "wget -O /dev/null http://funny-movies-dev.loitra.xyz/nginx-health || exit 1"]
       timeout: 5s
@@ -24,21 +29,18 @@ services:
   
   funnymovies-backend:
     container_name: funnymovies-backend
-    build:
-      context: ./backend
-      target: development
+    # build:
+    #   context: ./backend
+    #   target: production
+    build: ./backend
     image: funnymovies-backend
     restart: on-failure
-    command: npm run start -- --watch
     env_file:
       - ./backend/.env
     environment:
-      - MODE=DEV
+      - MODE=PROD
       - CLIENT_URL=https://funny-movies-dev.loitra.xyz
       - POSTGRES_HOST=funnymovies-db
-    volumes:
-      - ./backend:/usr/src/app
-      - /usr/src/app/node_modules
     depends_on:
       - funnymovies-db
     tty: true

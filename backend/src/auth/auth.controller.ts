@@ -13,7 +13,7 @@ import { appConfig } from '../app.config'
 
 import { AuthService } from './auth.service'
 import { LocalAuthGuard } from './local-auth.guard'
-import { MzPublic } from '../app/common/decorator/public.decorator'
+import { MzPublic } from '../decorators/public.decorator'
 import { JoiValidationPipe } from '../app/common/validation.pipe'
 
 @ApiTags('authen')
