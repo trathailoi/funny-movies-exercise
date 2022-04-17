@@ -18,7 +18,7 @@ ENV PORT=${PORT}
 ARG API_VERSION=80
 ENV API_VERSION=${API_VERSION}
 
-CMD [ "dumb-init", "npm", "run", "start:dev"]
+CMD [ "dumb-init", "npx", "nest", "start", "--watch"]
 
 EXPOSE ${PORT}
 HEALTHCHECK --interval=5s --timeout=5s CMD curl -f http://127.0.0.1:${PORT}/api/v${API_VERSION}/health || exit 1
@@ -30,6 +30,7 @@ FROM node:17-alpine As build
 WORKDIR /usr/src/app
 
 COPY --from=development /usr/src/app/ ./
+COPY .env.production ./.env
 
 RUN npm run build
 
@@ -56,7 +57,6 @@ RUN npm install --only=production
 COPY . .
 
 COPY --from=build /usr/src/app/dist ./dist
-COPY --from=build /usr/src/app/.env.production ./.env
 
 CMD [ "dumb-init", "node", "dist/main"]
 

@@ -14,7 +14,7 @@ ENV NODE_ENV=production
 COPY . /vue-app
 
 ENV NODE_ENV=production
-ARG VITE_BASE_API=http://funnymovies-backend:3000
+ARG VITE_BASE_API=http://localhost:3000
 ENV VITE_BASE_API=${VITE_BASE_API}
 
 RUN VITE_BASE_API=${VITE_BASE_API} npm run build
